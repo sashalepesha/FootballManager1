@@ -1,0 +1,63 @@
+<h2>Games</h2>
+
+<div>
+
+  <input
+    [(ngModel)]="newGame.matchDate"
+    placeholder="2025-01-01T18:00:00Z">
+
+  <input
+    [(ngModel)]="newGame.stadium"
+    placeholder="Stadium">
+
+  <input
+    type="number"
+    [(ngModel)]="newGame.homeScore"
+    placeholder="Home Score">
+
+  <input
+    type="number"
+    [(ngModel)]="newGame.awayScore"
+    placeholder="Away Score">
+
+  <input
+    type="number"
+    [(ngModel)]="newGame.homeTeam.id"
+    placeholder="Home Team ID">
+
+  <input
+    type="number"
+    [(ngModel)]="newGame.awayTeam.id"
+    placeholder="Away Team ID">
+
+  <button (click)="create()">
+    Create
+  </button>
+
+</div>
+
+<hr>
+
+<table>
+
+  <tr *ngFor="let game of games">
+
+    <td>{{ game.homeTeam?.name }}</td>
+
+    <td>
+      {{ game.homeScore }} : {{ game.awayScore }}
+    </td>
+
+    <td>{{ game.awayTeam?.name }}</td>
+
+    <td>{{ game.matchDate }}</td>
+
+    <td>
+      <button (click)="delete(game.id!)">
+        Delete
+      </button>
+    </td>
+
+  </tr>
+
+</table>

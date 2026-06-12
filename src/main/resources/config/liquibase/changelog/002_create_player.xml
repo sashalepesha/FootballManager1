@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+      http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="002-create-player" author="sasha">
+
+    <createTable tableName="player">
+
+      <column name="id" type="bigserial">
+        <constraints primaryKey="true"/>
+      </column>
+
+      <column name="first_name" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="last_name" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+
+      <column name="birth_date" type="date"/>
+
+      <column name="nationality" type="varchar(255)"/>
+
+      <column name="position" type="varchar(255)"/>
+
+      <column name="market_value" type="numeric(21,2)"/>
+
+      <column name="team_id" type="bigint"/>
+    </createTable>
+
+    <addForeignKeyConstraint
+      baseTableName="player"
+      baseColumnNames="team_id"
+      referencedTableName="team"
+      referencedColumnNames="id"
+      constraintName="fk_player_team"/>
+
+  </changeSet>
+
+</databaseChangeLog>

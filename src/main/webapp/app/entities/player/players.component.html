@@ -1,0 +1,60 @@
+<h2>Players</h2>
+
+<div class="player-form">
+  <input [(ngModel)]="newPlayer.firstName" placeholder="First name" />
+
+  <input [(ngModel)]="newPlayer.lastName" placeholder="Last name" />
+
+  <input [(ngModel)]="newPlayer.nationality" placeholder="Nationality" />
+
+  <input [(ngModel)]="newPlayer.position" placeholder="Position" />
+
+  <input type="number" [(ngModel)]="newPlayer.marketValue" placeholder="Market value" />
+
+  <select [(ngModel)]="newPlayer.team.id" name="teamId">
+    <option [ngValue]="null">Select team</option>
+
+    <option *ngFor="let team of teams" [ngValue]="team.id">{{ team.name }} ({{ team.city }})</option>
+  </select>
+
+  <button (click)="create()">Create</button>
+</div>
+
+<hr />
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Nationality</th>
+      <th>Position</th>
+      <th>Market Value</th>
+      <th>Team ID</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let player of players">
+      <td>{{ player.id }}</td>
+
+      <td>
+        {{ player.firstName }}
+        {{ player.lastName }}
+      </td>
+
+      <td>{{ player.nationality }}</td>
+
+      <td>{{ player.position }}</td>
+
+      <td>{{ player.marketValue }}</td>
+
+      <td>{{ player.team?.name }}</td>
+
+      <td>
+        <button (click)="delete(player.id!)">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

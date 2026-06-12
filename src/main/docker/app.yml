@@ -1,0 +1,35 @@
+# This configuration is intended for development purpose, it's **your** responsibility to harden it for production
+name: footballmanager
+services:
+  app:
+    image: footballmanager
+    build:
+      context: ../../..        # Поднимаемся из src/main/docker в корень проекта
+      dockerfile: Dockerfile  # Путь от корня проекта до Dockerfile
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,api-docs
+      - MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED=true
+      - SPRING_SECURITY_REMEMBER_ME_KEY=d8c9dff1f387e7bdd0442cf390797ada8b13e7be802e31fd23711fc6e4266353f06e5ade92c820aec42fa66bf7d4514696bc
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/footballManager
+      - SPRING_DATASOURCE_USERNAME=footballManager
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_LIQUIBASE_URL=jdbc:postgresql://postgresql:5432/footballManager
+    ports:
+      - 127.0.0.1:8080:8080
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8080/management/health
+      interval: 5s
+      timeout: 5s
+      retries: 40
+    depends_on:
+      postgresql:
+        condition: service_healthy
+  postgresql:
+    extends:
+      file: ./postgresql.yml
+      service: postgresql

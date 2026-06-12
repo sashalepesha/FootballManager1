@@ -1,0 +1,27 @@
+<h2>Teams</h2>
+
+<div>
+  <input [(ngModel)]="newTeam.name" placeholder="Name">
+  <input [(ngModel)]="newTeam.city" placeholder="City">
+
+  <button (click)="create()">
+    Create
+  </button>
+</div>
+
+<hr>
+
+<table>
+
+  <tr *ngFor="let team of teams">
+    <td>{{ team.name }}</td>
+    <td>{{ team.city }}</td>
+
+    <td>
+      <button (click)="delete(team.id!)">
+        Delete
+      </button>
+    </td>
+  </tr>
+
+</table>
