@@ -1,63 +1,102 @@
-<h2>Games</h2>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="page-title mb-0">🏟 Matches</h2>
+  </div>
 
-<div>
+  <div class="football-card mb-4">
+    <div class="football-header">Create Match</div>
 
-  <input
-    [(ngModel)]="newGame.matchDate"
-    placeholder="2025-01-01T18:00:00Z">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-lg-3">
+          <input type="text" class="form-control" [(ngModel)]="newGame.matchDate" placeholder="2026-06-07T12:39:00Z" />
+        </div>
 
-  <input
-    [(ngModel)]="newGame.stadium"
-    placeholder="Stadium">
+        <div class="col-lg-2">
+          <input type="text" class="form-control" [(ngModel)]="newGame.stadium" placeholder="Stadium" />
+        </div>
 
-  <input
-    type="number"
-    [(ngModel)]="newGame.homeScore"
-    placeholder="Home Score">
+        <div class="col-lg-2">
+          <select class="form-select" [(ngModel)]="newGame.homeTeam">
+            <option [ngValue]="null">Home Team</option>
 
-  <input
-    type="number"
-    [(ngModel)]="newGame.awayScore"
-    placeholder="Away Score">
+            <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }} (ID: {{ team.id }})</option>
+          </select>
+        </div>
 
-  <input
-    type="number"
-    [(ngModel)]="newGame.homeTeam.id"
-    placeholder="Home Team ID">
+        <div class="col-lg-2">
+          <select class="form-select" [(ngModel)]="newGame.awayTeam">
+            <option [ngValue]="null">Away Team</option>
 
-  <input
-    type="number"
-    [(ngModel)]="newGame.awayTeam.id"
-    placeholder="Away Team ID">
+            <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }} (ID: {{ team.id }})</option>
+          </select>
+        </div>
 
-  <button (click)="create()">
-    Create
-  </button>
+        <div class="col-lg-1">
+          <input type="number" class="form-control" [(ngModel)]="newGame.homeScore" placeholder="H" />
+        </div>
 
+        <div class="col-lg-1">
+          <input type="number" class="form-control" [(ngModel)]="newGame.awayScore" placeholder="A" />
+        </div>
+
+        <div class="col-lg-1">
+          <button class="btn btn-success football-btn w-100" (click)="create()">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="football-card">
+    <div class="football-header">Match List</div>
+
+    <div class="table-responsive">
+      <table class="table football-table align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Home Team</th>
+            <th>Score</th>
+            <th>Away Team</th>
+            <th>Date</th>
+            <th>Stadium</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngIf="games.length === 0">
+            <td colspan="6" class="text-center py-4">No matches available</td>
+          </tr>
+
+          <tr *ngFor="let game of games">
+            <td>
+              <strong>{{ game.homeTeam?.name }}</strong>
+            </td>
+
+            <td class="match-score fw-bold">
+              {{ game.homeScore }}
+              :
+              {{ game.awayScore }}
+            </td>
+
+            <td>
+              <strong>{{ game.awayTeam?.name }}</strong>
+            </td>
+
+            <td>
+              {{ game.matchDate }}
+            </td>
+
+            <td>
+              {{ game.stadium }}
+            </td>
+
+            <td>
+              <button class="btn btn-outline-danger btn-sm" (click)="delete(game.id!)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-
-<hr>
-
-<table>
-
-  <tr *ngFor="let game of games">
-
-    <td>{{ game.homeTeam?.name }}</td>
-
-    <td>
-      {{ game.homeScore }} : {{ game.awayScore }}
-    </td>
-
-    <td>{{ game.awayTeam?.name }}</td>
-
-    <td>{{ game.matchDate }}</td>
-
-    <td>
-      <button (click)="delete(game.id!)">
-        Delete
-      </button>
-    </td>
-
-  </tr>
-
-</table>

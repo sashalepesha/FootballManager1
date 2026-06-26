@@ -1,36 +1,54 @@
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
 
-/* ==========================================================================
-Navbar
-========================================================================== */
+.football-navbar {
+  background: linear-gradient(135deg, #0f172a 0%, #111827 50%, #14532d 100%);
 
-.navbar-version {
-  font-size: 0.65em;
-  color: $navbar-dark-color;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 0.75rem 1rem;
 }
 
-.profile-image {
-  height: 1.75em;
-  width: 1.75em;
+.football-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+
+  color: white;
+  font-size: 1.25rem;
 }
 
-.navbar {
-  padding: 0.2rem 1rem;
-
-  a.nav-link {
-    font-weight: 400;
-  }
+.brand-title {
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
-/* ==========================================================================
-Logo styles
-========================================================================== */
-.logo-img {
-  height: 45px;
-  width: 45px;
-  display: inline-block;
-  vertical-align: middle;
-  background: url('/content/images/logo-jhipster.png') no-repeat center center;
-  background-size: contain;
+.brand-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+}
+
+.football-link {
+  color: rgba(255, 255, 255, 0.8) !important;
+  padding: 0.7rem 1rem !important;
+  border-radius: 10px;
+  transition: 0.25s ease;
+}
+
+.football-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white !important;
+}
+
+.football-dropdown {
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
 }

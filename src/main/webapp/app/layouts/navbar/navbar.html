@@ -1,203 +1,123 @@
-<nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-dark">
+<nav data-cy="navbar" class="navbar navbar-expand-lg football-navbar">
   <div class="container-fluid">
-    <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
-      <span class="logo-img"></span>
-      <span class="navbar-title">FootballManager</span>
-      <span class="navbar-version">{{ version }}</span>
+    <a class="navbar-brand d-flex align-items-center" routerLink="/" (click)="collapseNavbar()">
+      <span class="football-logo"> 🏆 </span>
+
+      <div class="ms-2">
+        <div class="brand-title">Football Manager</div>
+        <div class="brand-subtitle">Sports Dashboard</div>
+      </div>
     </a>
-    <a
-      class="navbar-toggler d-lg-none"
-      href="javascript:void(0);"
-      data-toggle="collapse"
-      data-target="#navbarResponsive"
-      aria-controls="navbarResponsive"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-      (click)="isNavbarCollapsed.update(isNavbarCollapsed => !isNavbarCollapsed)"
-    >
-      <fa-icon icon="bars" />
-    </a>
-    <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed()">
+
+    <button class="navbar-toggler" type="button" (click)="isNavbarCollapsed.update(isNavbarCollapsed => !isNavbarCollapsed)">
+      <fa-icon icon="bars"></fa-icon>
+    </button>
+
+    <div class="collapse navbar-collapse" [ngbCollapse]="isNavbarCollapsed()">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
-            <span>
-              <fa-icon icon="home" />
-              <span>Home</span>
-            </span>
+          <a class="nav-link football-link" routerLink="/" (click)="collapseNavbar()">
+            <fa-icon icon="home"></fa-icon>
+            Dashboard
           </a>
         </li>
+
         @if (account() !== null) {
-          <li
-            ngbDropdown
-            class="nav-item dropdown pointer"
-            display="dynamic"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            data-cy="entity"
-          >
-            <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">
-              <span>
-                <fa-icon icon="th-list" />
-                <span>Entities</span>
-              </span>
+          <li ngbDropdown class="nav-item dropdown" display="dynamic" data-cy="entity">
+            <a class="nav-link football-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0)">
+              <fa-icon icon="list"></fa-icon>
+              Football
             </a>
-            <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
-              <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
+
+            <ul ngbDropdownMenu class="dropdown-menu football-dropdown">
+              <!-- jhipster-needle-add-entity-to-menu -->
             </ul>
           </li>
         }
-        <li
-          *jhiHasAnyAuthority="'ROLE_ADMIN'"
-          ngbDropdown
-          class="nav-item dropdown pointer"
-          display="dynamic"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          data-cy="adminMenu"
-        >
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">
-            <span>
-              <fa-icon icon="users-cog" />
-              <span>Administration</span>
-            </span>
+
+        <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown" display="dynamic">
+          <a class="nav-link football-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0)">
+            <fa-icon icon="cogs"></fa-icon>
+            Admin
           </a>
-          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
+
+          <ul ngbDropdownMenu class="dropdown-menu football-dropdown">
             <li>
-              <a
-                class="dropdown-item"
-                routerLink="/authority"
-                routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="collapseNavbar()"
-              >
-                <fa-icon icon="asterisk" [fixedWidth]="true" />
-                <span>Authority</span>
+              <a class="dropdown-item" routerLink="/user-management" (click)="collapseNavbar()">
+                <fa-icon icon="users"></fa-icon>
+                User Management
               </a>
             </li>
+
             <li>
-              <a
-                class="dropdown-item"
-                routerLink="/user-management"
-                routerLinkActive="active"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="collapseNavbar()"
-              >
-                <fa-icon icon="asterisk" [fixedWidth]="true" />
-                <span>User Management</span>
+              <a class="dropdown-item" routerLink="/admin/metrics" (click)="collapseNavbar()">
+                <fa-icon icon="tachometer-alt"></fa-icon>
+                Metrics
               </a>
             </li>
-            <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
+
             <li>
-              <a class="dropdown-item" routerLink="/admin/metrics" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="tachometer-alt" [fixedWidth]="true" />
-                <span>Metrics</span>
+              <a class="dropdown-item" routerLink="/admin/health" (click)="collapseNavbar()">
+                <fa-icon icon="heart"></fa-icon>
+                Health
               </a>
             </li>
+
             <li>
-              <a class="dropdown-item" routerLink="/admin/health" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="heart" [fixedWidth]="true" />
-                <span>Health</span>
+              <a class="dropdown-item" routerLink="/admin/logs" (click)="collapseNavbar()">
+                <fa-icon icon="tasks"></fa-icon>
+                Logs
               </a>
             </li>
-            <li>
-              <a class="dropdown-item" routerLink="/admin/configuration" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="cogs" [fixedWidth]="true" />
-                <span>Configuration</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" routerLink="/admin/logs" routerLinkActive="active" (click)="collapseNavbar()">
-                <fa-icon icon="tasks" [fixedWidth]="true" />
-                <span>Logs</span>
-              </a>
-            </li>
-            @if (openAPIEnabled()) {
-              <li>
-                <a class="dropdown-item" routerLink="/admin/docs" routerLinkActive="active" (click)="collapseNavbar()">
-                  <fa-icon icon="book" [fixedWidth]="true" />
-                  <span>API</span>
-                </a>
-              </li>
-            }
           </ul>
         </li>
-        <li
-          ngbDropdown
-          class="nav-item dropdown pointer"
-          display="dynamic"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          data-cy="accountMenu"
-        >
+
+        <li ngbDropdown class="nav-item dropdown" display="dynamic">
           @let accountRef = account();
-          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
+
+          <a class="nav-link football-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0)">
             @if (!accountRef?.imageUrl) {
-              <span>
-                <fa-icon icon="user" />
-                <span>Account</span>
-              </span>
+              <fa-icon icon="user"></fa-icon>
+              <span class="ms-1">Account</span>
             } @else {
-              <span>
-                <img [src]="accountRef!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
-              </span>
+              <img [src]="accountRef!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
             }
           </a>
-          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
+
+          <ul ngbDropdownMenu class="dropdown-menu football-dropdown">
             @if (accountRef !== null) {
               <li>
-                <a
-                  class="dropdown-item"
-                  routerLink="/account/settings"
-                  routerLinkActive="active"
-                  (click)="collapseNavbar()"
-                  data-cy="settings"
-                >
-                  <fa-icon icon="wrench" [fixedWidth]="true" />
-                  <span>Settings</span>
+                <a class="dropdown-item" routerLink="/account/settings" (click)="collapseNavbar()">
+                  <fa-icon icon="wrench"></fa-icon>
+                  Settings
                 </a>
               </li>
+
               <li>
-                <a
-                  class="dropdown-item"
-                  routerLink="/account/password"
-                  routerLinkActive="active"
-                  (click)="collapseNavbar()"
-                  data-cy="passwordItem"
-                >
-                  <fa-icon icon="lock" [fixedWidth]="true" />
-                  <span>Password</span>
+                <a class="dropdown-item" routerLink="/account/password" (click)="collapseNavbar()">
+                  <fa-icon icon="lock"></fa-icon>
+                  Password
                 </a>
               </li>
+
               <li>
-                <a class="dropdown-item" routerLink="/account/sessions" routerLinkActive="active" (click)="collapseNavbar()">
-                  <fa-icon icon="cloud" [fixedWidth]="true" />
-                  <span>Sessions</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" (click)="logout()" id="logout" data-cy="logout">
-                  <fa-icon icon="sign-out-alt" [fixedWidth]="true" />
-                  <span>Sign out</span>
+                <a class="dropdown-item text-danger" (click)="logout()">
+                  <fa-icon icon="sign-out-alt"></fa-icon>
+                  Sign Out
                 </a>
               </li>
             } @else {
               <li>
-                <a class="dropdown-item" (click)="login()" id="login" data-cy="login">
-                  <fa-icon icon="sign-in-alt" [fixedWidth]="true" />
-                  <span>Sign in</span>
+                <a class="dropdown-item" (click)="login()">
+                  <fa-icon icon="sign-in-alt"></fa-icon>
+                  Sign In
                 </a>
               </li>
+
               <li>
-                <a
-                  class="dropdown-item"
-                  routerLink="/account/register"
-                  routerLinkActive="active"
-                  (click)="collapseNavbar()"
-                  data-cy="register"
-                >
-                  <fa-icon icon="user-plus" [fixedWidth]="true" />
-                  <span>Register</span>
+                <a class="dropdown-item" routerLink="/account/register" (click)="collapseNavbar()">
+                  <fa-icon icon="user-plus"></fa-icon>
+                  Register
                 </a>
               </li>
             }

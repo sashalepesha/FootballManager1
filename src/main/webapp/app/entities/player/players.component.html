@@ -1,60 +1,92 @@
-<h2>Players</h2>
+<div class="container py-4">
+  <h2 class="page-title">🏃 Players</h2>
 
-<div class="player-form">
-  <input [(ngModel)]="newPlayer.firstName" placeholder="First name" />
+  <div class="football-card mb-4">
+    <div class="football-header">Create Player</div>
 
-  <input [(ngModel)]="newPlayer.lastName" placeholder="Last name" />
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-2">
+          <input class="form-control" [(ngModel)]="newPlayer.firstName" placeholder="First Name" />
+        </div>
 
-  <input [(ngModel)]="newPlayer.nationality" placeholder="Nationality" />
+        <div class="col-md-2">
+          <input class="form-control" [(ngModel)]="newPlayer.lastName" placeholder="Last Name" />
+        </div>
 
-  <input [(ngModel)]="newPlayer.position" placeholder="Position" />
+        <div class="col-md-2">
+          <input class="form-control" [(ngModel)]="newPlayer.nationality" placeholder="Nationality" />
+        </div>
 
-  <input type="number" [(ngModel)]="newPlayer.marketValue" placeholder="Market value" />
+        <div class="col-md-2">
+          <input class="form-control" [(ngModel)]="newPlayer.position" placeholder="Position" />
+        </div>
 
-  <select [(ngModel)]="newPlayer.team.id" name="teamId">
-    <option [ngValue]="null">Select team</option>
+        <div class="col-md-2">
+          <select class="form-select" [(ngModel)]="newPlayer.team">
+            <option [ngValue]="{}">Select Team</option>
 
-    <option *ngFor="let team of teams" [ngValue]="team.id">{{ team.name }} ({{ team.city }})</option>
-  </select>
+            <option *ngFor="let team of teams" [ngValue]="team">
+              {{ team.name }}
+            </option>
+          </select>
+        </div>
 
-  <button (click)="create()">Create</button>
+        <div class="col-md-2">
+          <button class="btn btn-success football-btn w-100" (click)="create()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="football-card">
+    <div class="football-header">Player List</div>
+
+    <div class="table-responsive">
+      <table class="table football-table mb-0">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Nationality</th>
+            <th>Position</th>
+            <th>Team</th>
+            <th width="120">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngIf="players.length === 0">
+            <td colspan="5" class="text-center py-4">No players found</td>
+          </tr>
+
+          <tr *ngFor="let player of players">
+            <td>
+              <strong>
+                {{ player.firstName }}
+                {{ player.lastName }}
+              </strong>
+            </td>
+
+            <td>
+              {{ player.nationality }}
+            </td>
+
+            <td>
+              <span class="stat-badge">
+                {{ player.position }}
+              </span>
+            </td>
+
+            <td>
+              {{ player.team?.name }}
+            </td>
+
+            <td>
+              <button class="btn btn-outline-danger btn-sm" (click)="delete(player.id!)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
-
-<hr />
-
-<table border="1">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>Nationality</th>
-      <th>Position</th>
-      <th>Market Value</th>
-      <th>Team ID</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr *ngFor="let player of players">
-      <td>{{ player.id }}</td>
-
-      <td>
-        {{ player.firstName }}
-        {{ player.lastName }}
-      </td>
-
-      <td>{{ player.nationality }}</td>
-
-      <td>{{ player.position }}</td>
-
-      <td>{{ player.marketValue }}</td>
-
-      <td>{{ player.team?.name }}</td>
-
-      <td>
-        <button (click)="delete(player.id!)">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</table>

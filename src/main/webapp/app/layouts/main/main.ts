@@ -3,12 +3,14 @@ import { Router, RouterOutlet } from '@angular/router';
 
 import { AppPageTitleStrategy } from 'app/app-page-title-strategy';
 import { AccountService } from 'app/core/auth/account.service';
+
 import Footer from '../footer/footer';
 import PageRibbon from '../profiles/page-ribbon';
 
 @Component({
   selector: 'jhi-main',
   templateUrl: './main.html',
+  styleUrls: ['./main.scss'],
   providers: [AppPageTitleStrategy],
   imports: [RouterOutlet, Footer, PageRibbon],
 })

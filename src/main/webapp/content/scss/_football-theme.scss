@@ -1,0 +1,61 @@
+:root {
+  --football-green: #0f5132;
+  --football-green-light: #198754;
+  --football-card: rgba(255, 255, 255, 0.95);
+}
+
+body {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+    url('/content/images/football-bg.jpg') center/cover fixed;
+  min-height: 100vh;
+}
+
+.page-title {
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.football-card {
+  background: var(--football-card);
+  border: 0;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.football-header {
+  background: linear-gradient(135deg, var(--football-green), var(--football-green-light));
+  color: white;
+  border-radius: 18px 18px 0 0;
+  padding: 1rem 1.25rem;
+}
+
+.football-btn {
+  border-radius: 30px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+}
+
+.football-table {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.football-table thead {
+  background: var(--football-green);
+  color: white;
+}
+
+.stat-badge {
+  background: #198754;
+  color: white;
+  border-radius: 20px;
+  padding: 0.35rem 0.8rem;
+}
+
+.match-score {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #198754;
+}
