@@ -6,16 +6,52 @@
 
     <div class="card-body">
       <div class="row g-3">
-        <div class="col-md-5">
-          <input class="form-control" [(ngModel)]="newTeam.name" placeholder="Team name" />
+        <div class="col-md-3">
+          <input
+            class="form-control"
+            [(ngModel)]="newTeam.name"
+            #name="ngModel"
+            required
+            [class.is-invalid]="name.invalid && name.touched"
+            placeholder="Team name"
+          />
+
+          <div class="invalid-feedback" *ngIf="name.invalid && name.touched">Team name is required.</div>
         </div>
 
-        <div class="col-md-5">
-          <input class="form-control" [(ngModel)]="newTeam.city" placeholder="City" />
+        <div class="col-md-3">
+          <input
+            class="form-control"
+            [(ngModel)]="newTeam.city"
+            #city="ngModel"
+            required
+            [class.is-invalid]="city.invalid && city.touched"
+            placeholder="City"
+          />
+
+          <div class="invalid-feedback" *ngIf="city.invalid && city.touched">City is required.</div>
+        </div>
+
+        <div class="col-md-3">
+          <input class="form-control" [(ngModel)]="newTeam.stadium" placeholder="Stadium" />
+        </div>
+
+        <div class="col-md-1">
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="newTeam.budget"
+            #budget="ngModel"
+            min="0"
+            [class.is-invalid]="newTeam.budget != null && newTeam.budget < 0"
+            placeholder="Budget"
+          />
+
+          <div class="invalid-feedback" *ngIf="newTeam.budget != null && newTeam.budget < 0">Budget must be positive.</div>
         </div>
 
         <div class="col-md-2">
-          <button class="btn btn-success w-100 football-btn" (click)="create()">Create</button>
+          <button class="btn btn-success football-btn w-100" [disabled]="!isValid()" (click)="create()">Create</button>
         </div>
       </div>
     </div>
@@ -27,17 +63,33 @@
         <tr>
           <th>Club</th>
           <th>City</th>
+          <th>Stadium</th>
+          <th>Budget</th>
           <th width="150">Actions</th>
         </tr>
       </thead>
 
       <tbody>
+        <tr *ngIf="teams.length === 0">
+          <td colspan="5" class="text-center py-4">No teams available</td>
+        </tr>
+
         <tr *ngFor="let team of teams">
           <td>
             <strong>{{ team.name }}</strong>
           </td>
 
-          <td>{{ team.city }}</td>
+          <td>
+            {{ team.city }}
+          </td>
+
+          <td>
+            {{ team.stadium || '-' }}
+          </td>
+
+          <td>
+            {{ team.budget || '-' }}
+          </td>
 
           <td>
             <button class="btn btn-outline-danger btn-sm" (click)="delete(team.id!)">Delete</button>

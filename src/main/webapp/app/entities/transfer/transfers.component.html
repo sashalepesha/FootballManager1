@@ -1,0 +1,150 @@
+<div class="container py-4">
+  <h2 class="page-title">💰 Transfers</h2>
+
+  <div class="alert alert-info">
+    💱 NBRB exchange rate:
+
+    <strong>
+      1 USD =
+
+      {{ usdRate | number: '1.0-4' }}
+
+      BYN
+    </strong>
+  </div>
+
+  <div class="football-card mb-4">
+    <div class="football-header">
+      {{ editing ? 'Edit Transfer' : 'Create Transfer' }}
+    </div>
+
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-2">
+          <select class="form-select" [(ngModel)]="newTransfer.player">
+            <option [ngValue]="{}">Select Player</option>
+
+            <option *ngFor="let player of players" [ngValue]="player">
+              {{ player.firstName }}
+              {{ player.lastName }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <select class="form-select" [(ngModel)]="newTransfer.fromTeam">
+            <option [ngValue]="{}">From Team</option>
+
+            <option *ngFor="let team of teams" [ngValue]="team">
+              {{ team.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <select class="form-select" [(ngModel)]="newTransfer.toTeam">
+            <option [ngValue]="{}">To Team</option>
+
+            <option *ngFor="let team of teams" [ngValue]="team">
+              {{ team.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <input type="number" class="form-control" [(ngModel)]="newTransfer.transferFeeUsd" placeholder="USD" />
+        </div>
+
+        <div class="col-md-2">
+          <input type="number" class="form-control" [(ngModel)]="newTransfer.transferFeeByn" placeholder="BYN" />
+        </div>
+
+        <div class="col-md-2">
+          <input type="date" class="form-control" [(ngModel)]="newTransfer.transferDate" />
+        </div>
+
+        <div class="col-md-12">
+          <button class="btn btn-success football-btn" (click)="save()" [disabled]="!isValid()">
+            {{ editing ? 'Update' : 'Create' }}
+          </button>
+
+          <button *ngIf="editing" class="btn btn-secondary ms-2" (click)="cancel()">Cancel</button>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
+        {{ errorMessage }}
+      </div>
+    </div>
+  </div>
+
+  <div class="football-card">
+    <div class="football-header">Transfer List</div>
+
+    <div class="table-responsive">
+      <table class="table football-table">
+        <thead>
+          <tr>
+            <th>Player</th>
+
+            <th>From</th>
+
+            <th>To</th>
+
+            <th>USD</th>
+
+            <th>BYN</th>
+
+            <th>Date</th>
+
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngIf="transfers.length === 0">
+            <td colspan="7" class="text-center">No transfers found</td>
+          </tr>
+
+          <tr *ngFor="let transfer of transfers">
+            <td>
+              {{ transfer.player.firstName }}
+
+              {{ transfer.player.lastName }}
+            </td>
+
+            <td>
+              {{ transfer.fromTeam.name }}
+            </td>
+
+            <td>
+              {{ transfer.toTeam.name }}
+            </td>
+
+            <td>
+              {{ transfer.transferFeeUsd | number: '1.0-2' }}
+
+              $
+            </td>
+
+            <td>
+              {{ transfer.transferFeeByn | number: '1.0-2' }}
+
+              BYN
+            </td>
+
+            <td>
+              {{ transfer.transferDate }}
+            </td>
+
+            <td>
+              <button class="btn btn-outline-primary btn-sm me-2" (click)="edit(transfer)">Edit</button>
+
+              <button class="btn btn-outline-danger btn-sm" (click)="delete(transfer.id!)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -18,10 +18,14 @@ export class PlayersComponent implements OnInit {
   newPlayer: Player = {
     firstName: '',
     lastName: '',
+    birthDate: '',
     nationality: '',
     position: '',
+    marketValue: undefined,
     team: {},
   };
+
+  today: string = new Date().toISOString().split('T')[0];
 
   constructor(
     private playerService: PlayerService,
@@ -45,17 +49,41 @@ export class PlayersComponent implements OnInit {
     });
   }
 
-  create(): void {
-    this.playerService.create(this.newPlayer).subscribe(() => {
-      this.newPlayer = {
-        firstName: '',
-        lastName: '',
-        nationality: '',
-        position: '',
-        team: {},
-      };
+  isValid(): boolean {
+    return !!(
+      this.newPlayer.firstName?.trim() &&
+      this.newPlayer.lastName?.trim() &&
+      this.newPlayer.nationality?.trim() &&
+      this.newPlayer.position?.trim() &&
+      this.newPlayer.birthDate &&
+      this.newPlayer.team &&
+      this.newPlayer.team.id &&
+      (this.newPlayer.marketValue == null || this.newPlayer.marketValue >= 0) &&
+      this.newPlayer.birthDate <= this.today
+    );
+  }
 
-      this.load();
+  create(): void {
+    if (!this.isValid()) {
+      return;
+    }
+
+    this.playerService.create(this.newPlayer).subscribe({
+      next: () => {
+        this.newPlayer = {
+          firstName: '',
+          lastName: '',
+          birthDate: '',
+          nationality: '',
+          position: '',
+          marketValue: undefined,
+          team: {},
+        };
+
+        this.load();
+      },
+
+      error: err => console.error(err),
     });
   }
 

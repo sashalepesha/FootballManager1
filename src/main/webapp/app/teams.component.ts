@@ -8,14 +8,16 @@ import { TeamService, Team } from './team.service';
   selector: 'app-teams',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './teams.component.html'
+  templateUrl: './teams.component.html',
 })
 export class TeamsComponent implements OnInit {
-
   teams: Team[] = [];
 
   newTeam: Team = {
-    name: ''
+    name: '',
+    city: '',
+    stadium: '',
+    budget: undefined,
   };
 
   constructor(private teamService: TeamService) {}
@@ -30,9 +32,23 @@ export class TeamsComponent implements OnInit {
     });
   }
 
+  isValid(): boolean {
+    return !!(this.newTeam.name?.trim() && this.newTeam.city?.trim() && (this.newTeam.budget == null || this.newTeam.budget >= 0));
+  }
+
   create(): void {
+    if (!this.isValid()) {
+      return;
+    }
+
     this.teamService.create(this.newTeam).subscribe(() => {
-      this.newTeam = { name: '' };
+      this.newTeam = {
+        name: '',
+        city: '',
+        stadium: '',
+        budget: undefined,
+      };
+
       this.load();
     });
   }

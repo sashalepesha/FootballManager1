@@ -30,7 +30,21 @@
             </a>
 
             <ul ngbDropdownMenu class="dropdown-menu football-dropdown">
-              <!-- jhipster-needle-add-entity-to-menu -->
+              <li>
+                <a class="dropdown-item" routerLink="/teams" (click)="collapseNavbar()"> 🏟 Teams </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item" routerLink="/players" (click)="collapseNavbar()"> 🏃 Players </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item" routerLink="/games" (click)="collapseNavbar()"> ⚽ Matches </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item" routerLink="/transfers" (click)="collapseNavbar()"> 💰 Transfers </a>
+              </li>
             </ul>
           </li>
         }
@@ -73,19 +87,17 @@
         </li>
 
         <li ngbDropdown class="nav-item dropdown" display="dynamic">
-          @let accountRef = account();
-
           <a class="nav-link football-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0)">
-            @if (!accountRef?.imageUrl) {
+            @if (!account()?.imageUrl) {
               <fa-icon icon="user"></fa-icon>
               <span class="ms-1">Account</span>
             } @else {
-              <img [src]="accountRef!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
+              <img [src]="account()!.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
             }
           </a>
 
           <ul ngbDropdownMenu class="dropdown-menu football-dropdown">
-            @if (accountRef !== null) {
+            @if (account() !== null) {
               <li>
                 <a class="dropdown-item" routerLink="/account/settings" (click)="collapseNavbar()">
                   <fa-icon icon="wrench"></fa-icon>

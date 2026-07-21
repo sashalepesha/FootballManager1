@@ -4,19 +4,25 @@ import { Observable } from 'rxjs';
 
 export interface Player {
   id?: number;
+
   firstName: string;
   lastName: string;
+
+  birthDate?: string;
+
   nationality?: string;
+
   position?: string;
+
   marketValue?: number;
+
   team?: any;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PlayerService {
-
   private api = '/api/players';
 
   constructor(private http: HttpClient) {}
@@ -34,10 +40,7 @@ export class PlayerService {
   }
 
   update(player: Player): Observable<Player> {
-    return this.http.put<Player>(
-      `${this.api}/${player.id}`,
-      player
-    );
+    return this.http.put<Player>(`${this.api}/${player.id}`, player);
   }
 
   delete(id: number): Observable<void> {

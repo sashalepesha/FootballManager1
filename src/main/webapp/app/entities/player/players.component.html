@@ -6,34 +6,109 @@
 
     <div class="card-body">
       <div class="row g-3">
-        <div class="col-md-2">
-          <input class="form-control" [(ngModel)]="newPlayer.firstName" placeholder="First Name" />
+        <!-- First Name -->
+        <div class="col-lg-2">
+          <input
+            class="form-control"
+            [(ngModel)]="newPlayer.firstName"
+            #firstName="ngModel"
+            required
+            [class.is-invalid]="firstName.invalid && firstName.touched"
+            placeholder="First Name"
+          />
+
+          <div class="invalid-feedback" *ngIf="firstName.invalid && firstName.touched">First name is required.</div>
         </div>
 
-        <div class="col-md-2">
-          <input class="form-control" [(ngModel)]="newPlayer.lastName" placeholder="Last Name" />
+        <!-- Last Name -->
+        <div class="col-lg-2">
+          <input
+            class="form-control"
+            [(ngModel)]="newPlayer.lastName"
+            #lastName="ngModel"
+            required
+            [class.is-invalid]="lastName.invalid && lastName.touched"
+            placeholder="Last Name"
+          />
+
+          <div class="invalid-feedback" *ngIf="lastName.invalid && lastName.touched">Last name is required.</div>
         </div>
 
-        <div class="col-md-2">
-          <input class="form-control" [(ngModel)]="newPlayer.nationality" placeholder="Nationality" />
+        <!-- Birth Date -->
+        <div class="col-lg-2">
+          <input
+            type="date"
+            class="form-control"
+            [(ngModel)]="newPlayer.birthDate"
+            [max]="today"
+            #birthDate="ngModel"
+            required
+            [class.is-invalid]="birthDate.invalid && birthDate.touched"
+          />
+
+          <div class="invalid-feedback" *ngIf="birthDate.invalid && birthDate.touched">Birth date is required.</div>
         </div>
 
-        <div class="col-md-2">
-          <input class="form-control" [(ngModel)]="newPlayer.position" placeholder="Position" />
+        <!-- Nationality -->
+        <div class="col-lg-2">
+          <input
+            class="form-control"
+            [(ngModel)]="newPlayer.nationality"
+            #nationality="ngModel"
+            required
+            [class.is-invalid]="nationality.invalid && nationality.touched"
+            placeholder="Nationality"
+          />
+
+          <div class="invalid-feedback" *ngIf="nationality.invalid && nationality.touched">Nationality is required.</div>
         </div>
 
-        <div class="col-md-2">
-          <select class="form-select" [(ngModel)]="newPlayer.team">
+        <!-- Position -->
+        <div class="col-lg-2">
+          <input
+            class="form-control"
+            [(ngModel)]="newPlayer.position"
+            #position="ngModel"
+            required
+            [class.is-invalid]="position.invalid && position.touched"
+            placeholder="Position"
+          />
+
+          <div class="invalid-feedback" *ngIf="position.invalid && position.touched">Position is required.</div>
+        </div>
+
+        <!-- Market Value -->
+        <div class="col-lg-2">
+          <input
+            type="number"
+            min="0"
+            class="form-control"
+            [(ngModel)]="newPlayer.marketValue"
+            placeholder="Market Value"
+            [class.is-invalid]="newPlayer.marketValue != null && newPlayer.marketValue < 0"
+          />
+
+          <div class="invalid-feedback" *ngIf="newPlayer.marketValue != null && newPlayer.marketValue < 0">
+            Market value cannot be negative.
+          </div>
+        </div>
+
+        <!-- Team -->
+        <div class="col-lg-4">
+          <select class="form-select" [(ngModel)]="newPlayer.team" #team="ngModel" required [class.is-invalid]="!newPlayer.team?.id">
             <option [ngValue]="{}">Select Team</option>
 
-            <option *ngFor="let team of teams" [ngValue]="team">
-              {{ team.name }}
+            <option *ngFor="let teamItem of teams" [ngValue]="teamItem">
+              {{ teamItem.name }}
             </option>
           </select>
+
+          <div class="invalid-feedback" *ngIf="!newPlayer.team?.id">Please select a team.</div>
         </div>
 
-        <div class="col-md-2">
-          <button class="btn btn-success football-btn w-100" (click)="create()">Add</button>
+        <!-- Create -->
+        <div class="col-lg-2">
+          <button class="btn btn-success football-btn w-100" [disabled]="!isValid()" (click)="create()">Create</button>
         </div>
       </div>
     </div>
@@ -43,20 +118,22 @@
     <div class="football-header">Player List</div>
 
     <div class="table-responsive">
-      <table class="table football-table mb-0">
+      <table class="table football-table align-middle mb-0">
         <thead>
           <tr>
             <th>Player</th>
+            <th>Birth Date</th>
             <th>Nationality</th>
             <th>Position</th>
+            <th>Market Value</th>
             <th>Team</th>
-            <th width="120">Actions</th>
+            <th>Action</th>
           </tr>
         </thead>
 
         <tbody>
           <tr *ngIf="players.length === 0">
-            <td colspan="5" class="text-center py-4">No players found</td>
+            <td colspan="7" class="text-center py-4">No players available</td>
           </tr>
 
           <tr *ngFor="let player of players">
@@ -68,6 +145,10 @@
             </td>
 
             <td>
+              {{ player.birthDate || '-' }}
+            </td>
+
+            <td>
               {{ player.nationality }}
             </td>
 
@@ -75,6 +156,10 @@
               <span class="stat-badge">
                 {{ player.position }}
               </span>
+            </td>
+
+            <td>
+              {{ player.marketValue || '-' }}
             </td>
 
             <td>

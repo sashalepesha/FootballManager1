@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet
+    id="005-transfer-currency-validation"
+    author="sasha">
+
+    <renameColumn
+      tableName="transfer"
+      oldColumnName="transfer_fee"
+      newColumnName="transfer_fee_usd"
+      columnDataType="DECIMAL(21,2)"/>
+
+    <addColumn tableName="transfer">
+
+      <column
+        name="transfer_fee_byn"
+        type="DECIMAL(21,2)">
+
+        <constraints nullable="false"/>
+
+      </column>
+
+    </addColumn>
+
+  </changeSet>
+
+</databaseChangeLog>

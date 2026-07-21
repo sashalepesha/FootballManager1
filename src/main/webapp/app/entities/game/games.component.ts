@@ -15,13 +15,13 @@ export class GamesComponent implements OnInit {
   games: Game[] = [];
   teams: Team[] = [];
 
-  newGame: any = {
+  newGame: Game = {
     matchDate: '',
     stadium: '',
     homeScore: 0,
     awayScore: 0,
-    homeTeam: null,
-    awayTeam: null,
+    homeTeam: {} as Team,
+    awayTeam: {} as Team,
   };
 
   constructor(
@@ -46,20 +46,42 @@ export class GamesComponent implements OnInit {
     });
   }
 
+  isValid(): boolean {
+    return !!(
+      this.newGame.matchDate &&
+      this.newGame.stadium &&
+      this.newGame.homeTeam?.id &&
+      this.newGame.awayTeam?.id &&
+      this.newGame.homeTeam.id !== this.newGame.awayTeam.id &&
+      this.newGame.homeScore! >= 0 &&
+      this.newGame.awayScore! >= 0
+    );
+  }
+
   create(): void {
-    this.gameService.create(this.newGame).subscribe({
+    if (!this.isValid()) {
+      return;
+    }
+
+    const game: Game = {
+      ...this.newGame,
+      matchDate: new Date(this.newGame.matchDate).toISOString(),
+    };
+
+    this.gameService.create(game).subscribe({
       next: () => {
         this.newGame = {
           matchDate: '',
           stadium: '',
           homeScore: 0,
           awayScore: 0,
-          homeTeam: null,
-          awayTeam: null,
+          homeTeam: {} as Team,
+          awayTeam: {} as Team,
         };
 
         this.load();
       },
+
       error: err => {
         console.error(err);
       },

@@ -4,25 +4,28 @@ import { UserRouteAccessService } from 'app/core/auth/user-route-access.service'
 import { Authority } from 'app/shared/jhipster/constants';
 
 import { errorRoute } from './layouts/error/error.route';
-import {TeamsComponent} from "./teams.component";
+
+import { TeamsComponent } from './teams.component';
 import { PlayersComponent } from './entities/player/players.component';
-
 import { GamesComponent } from './entities/game/games.component';
-
+import { TransfersComponent } from './entities/transfer/transfers.component';
 
 const routes: Routes = [
   {
     path: 'games',
-    component: GamesComponent
+    component: GamesComponent,
   },
-
   {
     path: 'players',
-    component: PlayersComponent
+    component: PlayersComponent,
   },
   {
     path: 'teams',
-    component: TeamsComponent
+    component: TeamsComponent,
+  },
+  {
+    path: 'transfers',
+    component: TransfersComponent,
   },
   {
     path: '',

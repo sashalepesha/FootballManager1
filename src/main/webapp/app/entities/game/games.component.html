@@ -1,47 +1,105 @@
 <div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="page-title mb-0">🏟 Matches</h2>
-  </div>
+  <h2 class="page-title">🏟 Matches</h2>
 
   <div class="football-card mb-4">
     <div class="football-header">Create Match</div>
 
     <div class="card-body">
       <div class="row g-3">
+        <!-- Match Date -->
         <div class="col-lg-3">
-          <input type="text" class="form-control" [(ngModel)]="newGame.matchDate" placeholder="2026-06-07T12:39:00Z" />
+          <input
+            type="datetime-local"
+            class="form-control"
+            [(ngModel)]="newGame.matchDate"
+            #matchDate="ngModel"
+            required
+            [class.is-invalid]="matchDate.invalid && matchDate.touched"
+          />
+
+          <div class="invalid-feedback" *ngIf="matchDate.invalid && matchDate.touched">Match date is required.</div>
         </div>
 
+        <!-- Stadium -->
         <div class="col-lg-2">
-          <input type="text" class="form-control" [(ngModel)]="newGame.stadium" placeholder="Stadium" />
+          <input
+            class="form-control"
+            [(ngModel)]="newGame.stadium"
+            #stadium="ngModel"
+            required
+            maxlength="100"
+            placeholder="Stadium"
+            [class.is-invalid]="stadium.invalid && stadium.touched"
+          />
+
+          <div class="invalid-feedback" *ngIf="stadium.invalid && stadium.touched">Stadium is required.</div>
         </div>
 
+        <!-- Home Team -->
         <div class="col-lg-2">
-          <select class="form-select" [(ngModel)]="newGame.homeTeam">
-            <option [ngValue]="null">Home Team</option>
+          <select class="form-select" [(ngModel)]="newGame.homeTeam" [class.is-invalid]="!newGame.homeTeam?.id">
+            <option [ngValue]="{}">Select Home Team</option>
 
-            <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }} (ID: {{ team.id }})</option>
+            <option *ngFor="let team of teams" [ngValue]="team">
+              {{ team.name }}
+            </option>
           </select>
+
+          <div class="invalid-feedback" *ngIf="!newGame.homeTeam?.id">Select home team.</div>
         </div>
 
+        <!-- Away Team -->
         <div class="col-lg-2">
-          <select class="form-select" [(ngModel)]="newGame.awayTeam">
-            <option [ngValue]="null">Away Team</option>
+          <select
+            class="form-select"
+            [(ngModel)]="newGame.awayTeam"
+            [class.is-invalid]="!newGame.awayTeam?.id || newGame.homeTeam?.id === newGame.awayTeam?.id"
+          >
+            <option [ngValue]="{}">Select Away Team</option>
 
-            <option *ngFor="let team of teams" [ngValue]="team">{{ team.name }} (ID: {{ team.id }})</option>
+            <option *ngFor="let team of teams" [ngValue]="team">
+              {{ team.name }}
+            </option>
           </select>
+
+          <div class="invalid-feedback" *ngIf="!newGame.awayTeam?.id">Select away team.</div>
+
+          <div class="invalid-feedback" *ngIf="newGame.homeTeam?.id && newGame.homeTeam?.id === newGame.awayTeam?.id">
+            Teams must be different.
+          </div>
         </div>
 
+        <!-- Home Score -->
         <div class="col-lg-1">
-          <input type="number" class="form-control" [(ngModel)]="newGame.homeScore" placeholder="H" />
+          <input
+            type="number"
+            min="0"
+            class="form-control"
+            [(ngModel)]="newGame.homeScore"
+            placeholder="H"
+            [class.is-invalid]="newGame.homeScore! < 0"
+          />
+
+          <div class="invalid-feedback" *ngIf="newGame.homeScore! < 0">≥ 0</div>
         </div>
 
+        <!-- Away Score -->
         <div class="col-lg-1">
-          <input type="number" class="form-control" [(ngModel)]="newGame.awayScore" placeholder="A" />
+          <input
+            type="number"
+            min="0"
+            class="form-control"
+            [(ngModel)]="newGame.awayScore"
+            placeholder="A"
+            [class.is-invalid]="newGame.awayScore! < 0"
+          />
+
+          <div class="invalid-feedback" *ngIf="newGame.awayScore! < 0">≥ 0</div>
         </div>
 
-        <div class="col-lg-1">
-          <button class="btn btn-success football-btn w-100" (click)="create()">Create</button>
+        <!-- Button -->
+        <div class="col-lg-1 d-grid">
+          <button class="btn btn-success football-btn" [disabled]="!isValid()" (click)="create()">Create</button>
         </div>
       </div>
     </div>
@@ -84,7 +142,7 @@
             </td>
 
             <td>
-              {{ game.matchDate }}
+              {{ game.matchDate | date: 'dd.MM.yyyy HH:mm' }}
             </td>
 
             <td>

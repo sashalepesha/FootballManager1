@@ -2,10 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-export interface Team {
-  id: number;
-  name: string;
-}
+import { Team } from '../../team.service';
 
 export interface Game {
   id?: number;
@@ -18,10 +15,9 @@ export interface Game {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GameService {
-
   private api = '/api/games';
 
   constructor(private http: HttpClient) {}
