@@ -28,6 +28,10 @@ export class TransfersComponent implements OnInit {
 
   errorMessage = '';
 
+  rateLoading = false;
+
+  rateError = '';
+
   newTransfer: Transfer = {
     id: undefined,
 
@@ -85,6 +89,27 @@ export class TransfersComponent implements OnInit {
   loadCurrency(): void {
     this.currencyService.getUsdRate().subscribe(res => {
       this.usdRate = res.usdToByn;
+    });
+  }
+
+  getRate(): void {
+    this.rateError = '';
+    this.rateLoading = true;
+
+    this.currencyService.getUsdRate().subscribe({
+      next: res => {
+        this.usdRate = res.usdToByn;
+
+        const usd = Number(this.newTransfer.transferFeeUsd) || 0;
+        this.newTransfer.transferFeeByn = Math.round(usd * this.usdRate * 100) / 100;
+
+        this.rateLoading = false;
+      },
+
+      error: () => {
+        this.rateError = 'Не удалось получить курс валют';
+        this.rateLoading = false;
+      },
     });
   }
 
@@ -146,6 +171,8 @@ export class TransfersComponent implements OnInit {
     this.editing = false;
 
     this.errorMessage = '';
+
+    this.rateError = '';
 
     this.newTransfer = {
       id: undefined,
