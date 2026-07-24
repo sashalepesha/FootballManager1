@@ -15,6 +15,9 @@ export class GamesComponent implements OnInit {
   games: Game[] = [];
   teams: Team[] = [];
 
+  generating = false;
+  generateError = '';
+
   newGame: Game = {
     matchDate: '',
     stadium: '',
@@ -91,6 +94,23 @@ export class GamesComponent implements OnInit {
   delete(id: number): void {
     this.gameService.delete(id).subscribe(() => {
       this.load();
+    });
+  }
+
+  generate500(): void {
+    this.generateError = '';
+    this.generating = true;
+
+    this.gameService.generate(500).subscribe({
+      next: () => {
+        this.generating = false;
+        this.load();
+      },
+
+      error: err => {
+        this.generateError = err.error?.message || 'Не удалось сгенерировать матчи';
+        this.generating = false;
+      },
     });
   }
 }

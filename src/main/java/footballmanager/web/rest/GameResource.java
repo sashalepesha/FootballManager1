@@ -2,9 +2,8 @@ package footballmanager.web.rest;
 
 import footballmanager.domain.Game;
 import footballmanager.service.GameService;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/games")
@@ -32,11 +31,13 @@ public class GameResource {
     }
 
     @PutMapping("/{id}")
-    public Game update(
-        @PathVariable Long id,
-        @RequestBody Game game
-    ) {
+    public Game update(@PathVariable Long id, @RequestBody Game game) {
         return gameService.save(game);
+    }
+
+    @PostMapping("/generate")
+    public int generate(@RequestParam(defaultValue = "500") int count) {
+        return gameService.generateRandom(count);
     }
 
     @DeleteMapping("/{id}")
