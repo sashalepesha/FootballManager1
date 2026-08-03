@@ -37,12 +37,23 @@ public class GameService {
         return gameRepository.findById(id).orElseThrow();
     }
 
+    public List<Game> findByHomeTeam(Long homeTeamId) {
+        return gameRepository.findByHomeTeamId(homeTeamId);
+    }
+
     public Game save(Game game) {
         return gameRepository.save(game);
     }
 
     public void delete(Long id) {
         gameRepository.deleteById(id);
+    }
+
+    /**
+     * Удаляет все матчи одним запросом (без построчной загрузки в память).
+     */
+    public void deleteAll() {
+        gameRepository.deleteAllInBatch();
     }
 
     /**

@@ -25,6 +25,11 @@ public class GameResource {
         return gameService.findOne(id);
     }
 
+    @GetMapping("/team/{teamId}")
+    public List<Game> getByHomeTeam(@PathVariable Long teamId) {
+        return gameService.findByHomeTeam(teamId);
+    }
+
     @PostMapping
     public Game create(@RequestBody Game game) {
         return gameService.save(game);
@@ -43,5 +48,10 @@ public class GameResource {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         gameService.delete(id);
+    }
+
+    @DeleteMapping
+    public void deleteAll() {
+        gameService.deleteAll();
     }
 }
