@@ -1,5 +1,6 @@
 package footballmanager.service;
 
+import footballmanager.domain.Player;
 import footballmanager.domain.Transfer;
 import footballmanager.exception.InvalidCurrencyException;
 import footballmanager.repository.TransferRepository;
@@ -16,10 +17,12 @@ public class TransferService {
 
     private final TransferRepository transferRepository;
     private final CurrencyService currencyService;
+    private final PlayerService playerService;
 
-    public TransferService(TransferRepository transferRepository, CurrencyService currencyService) {
+    public TransferService(TransferRepository transferRepository, CurrencyService currencyService, PlayerService playerService) {
         this.transferRepository = transferRepository;
         this.currencyService = currencyService;
+        this.playerService = playerService;
     }
 
     public List<Transfer> findAll() {
@@ -32,12 +35,22 @@ public class TransferService {
 
     public Transfer save(Transfer transfer) {
         validateCurrency(transfer);
-        return transferRepository.save(transfer);
+        Transfer saved = transferRepository.save(transfer);
+        updatePlayerMarketValue(saved);
+        return saved;
     }
 
     public Transfer update(Transfer transfer) {
         validateCurrency(transfer);
-        return transferRepository.save(transfer);
+        Transfer saved = transferRepository.save(transfer);
+        updatePlayerMarketValue(saved);
+        return saved;
+    }
+
+    private void updatePlayerMarketValue(Transfer transfer) {
+        Player player = playerService.findOne(transfer.getPlayer().getId());
+        player.setMarketValue(transfer.getTransferFeeUsd());
+        playerService.save(player);
     }
 
     public void delete(Long id) {
