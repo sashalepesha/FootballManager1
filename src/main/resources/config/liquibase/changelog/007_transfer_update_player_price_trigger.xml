@@ -9,7 +9,7 @@
 
   <changeSet id="007-transfer-update-player-price-trigger" author="sasha">
 
-    <!-- Function: sets player.market_value to the USD fee of the transfer that triggered it -->
+    
     <sql dbms="postgresql" splitStatements="false" endDelimiter="$$">
       CREATE OR REPLACE FUNCTION update_player_market_value()
       RETURNS TRIGGER AS $$
@@ -23,7 +23,7 @@
       $$ LANGUAGE plpgsql;
     </sql>
 
-    <!-- Trigger: fires after every transfer insert or update -->
+    
     <sql dbms="postgresql">
       DROP TRIGGER IF EXISTS trg_update_player_market_value ON transfer;
 
