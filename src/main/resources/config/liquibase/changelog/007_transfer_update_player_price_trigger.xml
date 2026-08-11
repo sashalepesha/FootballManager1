@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="007-transfer-update-player-price-trigger" author="sasha">
+
+    <!-- Function: sets player.market_value to the USD fee of the transfer that triggered it -->
+    <sql dbms="postgresql" splitStatements="false" endDelimiter="$$">
+      CREATE OR REPLACE FUNCTION update_player_market_value()
+      RETURNS TRIGGER AS $$
+      BEGIN
+      UPDATE player
+      SET market_value = NEW.transfer_fee_usd
+      WHERE id = NEW.player_id;
+
+      RETURN NEW;
+      END;
+      $$ LANGUAGE plpgsql;
+    </sql>
+
+    <!-- Trigger: fires after every transfer insert or update -->
+    <sql dbms="postgresql">
+      DROP TRIGGER IF EXISTS trg_update_player_market_value ON transfer;
+
+      CREATE TRIGGER trg_update_player_market_value
+        AFTER INSERT OR UPDATE ON transfer
+                          FOR EACH ROW
+                          EXECUTE FUNCTION update_player_market_value();
+    </sql>
+
+    <rollback>
+      <sql dbms="postgresql">DROP TRIGGER IF EXISTS trg_update_player_market_value ON transfer;</sql>
+      <sql dbms="postgresql">DROP FUNCTION IF EXISTS update_player_market_value();</sql>
+    </rollback>
+
+  </changeSet>
+
+</databaseChangeLog>

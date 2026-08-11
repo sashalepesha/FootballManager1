@@ -9,6 +9,12 @@
 
   <changeSet id="006-add-game-home-team-index" author="sasha">
 
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <indexExists indexName="idx_game_home_team_id"/>
+      </not>
+    </preConditions>
+
     <createIndex indexName="idx_game_home_team_id" tableName="game">
       <column name="home_team_id"/>
     </createIndex>
