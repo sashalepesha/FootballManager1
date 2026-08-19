@@ -22,5 +22,12 @@ WORKDIR /app
 # Копируем готовый jar-файл из этапа сборки
 COPY --from=builder /build/build/libs/football-manager-0.0.1-SNAPSHOT.jar app.jar
 
+# Распаковываем содержимое Spring Boot fat-jar обычным unzip в предсказуемую структуру
+# (BOOT-INF/classes, BOOT-INF/lib) на диске. Это нужно для InMemoryJavaCompiler: он
+# использует системный javac, а тот не умеет читать классы, вложенные внутрь fat-jar.
+# После распаковки классы становятся обычной директорией на файловой системе, и
+# стандартный classpath (java.class.path) начинает работать как обычно.
+RUN mkdir extracted && unzip -q app.jar -d extracted
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-cp", "extracted/BOOT-INF/classes:extracted/BOOT-INF/lib/*", "footballmanager.FootballManagerApp"]

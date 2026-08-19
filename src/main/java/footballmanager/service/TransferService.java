@@ -18,11 +18,18 @@ public class TransferService {
     private final TransferRepository transferRepository;
     private final CurrencyService currencyService;
     private final PlayerService playerService;
+    private final ApplicationScriptService applicationScriptService;
 
-    public TransferService(TransferRepository transferRepository, CurrencyService currencyService, PlayerService playerService) {
+    public TransferService(
+        TransferRepository transferRepository,
+        CurrencyService currencyService,
+        PlayerService playerService,
+        ApplicationScriptService applicationScriptService
+    ) {
         this.transferRepository = transferRepository;
         this.currencyService = currencyService;
         this.playerService = playerService;
+        this.applicationScriptService = applicationScriptService;
     }
 
     public List<Transfer> findAll() {
@@ -33,23 +40,25 @@ public class TransferService {
         return transferRepository.findById(id).orElseThrow(() -> new RuntimeException("Transfer not found"));
     }
 
+    // Player.marketValue is updated via the compiled ApplicationScript
+    // named ApplicationScriptService.PLAYER_PRICE_SCRIPT_NAME (see runPlayerPriceScript below).
     public Transfer save(Transfer transfer) {
         validateCurrency(transfer);
         Transfer saved = transferRepository.save(transfer);
-        updatePlayerMarketValue(saved);
+        runPlayerPriceScript(saved);
         return saved;
     }
 
     public Transfer update(Transfer transfer) {
         validateCurrency(transfer);
         Transfer saved = transferRepository.save(transfer);
-        updatePlayerMarketValue(saved);
+        runPlayerPriceScript(saved);
         return saved;
     }
 
-    private void updatePlayerMarketValue(Transfer transfer) {
+    private void runPlayerPriceScript(Transfer transfer) {
         Player player = playerService.findOne(transfer.getPlayer().getId());
-        player.setMarketValue(transfer.getTransferFeeUsd());
+        applicationScriptService.updatePlayerPrice(player, transfer);
         playerService.save(player);
     }
 

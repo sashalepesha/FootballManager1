@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="007-create-application-script" author="sasha">
+
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="application_script"/>
+      </not>
+    </preConditions>
+
+    <createTable tableName="application_script">
+
+      <column name="id" type="bigserial">
+        <constraints primaryKey="true"/>
+      </column>
+
+      <column name="name" type="varchar(100)">
+        <constraints nullable="false" unique="true"/>
+      </column>
+
+      <column name="code" type="text">
+        <constraints nullable="false"/>
+      </column>
+
+    </createTable>
+
+    <rollback>
+      <dropTable tableName="application_script"/>
+    </rollback>
+
+  </changeSet>
+
+  <!-- Seeds the default script used by TransferService/ApplicationScriptService to
+       recalculate a player's market value after a transfer. Editing the `code`
+       column of this row at runtime changes the behaviour without a redeploy. -->
+  <changeSet id="007-seed-player-price-script" author="sasha">
+
+    <preConditions onFail="MARK_RAN">
+      <sqlCheck expectedResult="0">
+        SELECT COUNT(*) FROM application_script WHERE name = 'PLAYER_PRICE_UPDATE_SCRIPT'
+      </sqlCheck>
+    </preConditions>
+
+    <insert tableName="application_script">
+
+      <column name="name" value="PLAYER_PRICE_UPDATE_SCRIPT"/>
+
+      <column name="code"><![CDATA[
+import footballmanager.domain.Player;
+import footballmanager.domain.Transfer;
+import footballmanager.script.PlayerPriceScript;
+
+public class GeneratedPlayerPriceScript implements PlayerPriceScript {
+    @Override
+    public void updatePrice(Player player, Transfer transfer) {
+        player.setMarketValue(transfer.getTransferFeeUsd());
+    }
+}
+]]></column>
+
+    </insert>
+
+    <rollback>
+      <sql>DELETE FROM application_script WHERE name = 'PLAYER_PRICE_UPDATE_SCRIPT';</sql>
+    </rollback>
+
+  </changeSet>
+
+</databaseChangeLog>
