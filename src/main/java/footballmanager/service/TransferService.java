@@ -1,13 +1,11 @@
 package footballmanager.service;
 
-import footballmanager.domain.Player;
 import footballmanager.domain.Transfer;
 import footballmanager.exception.InvalidCurrencyException;
 import footballmanager.repository.TransferRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,19 +15,16 @@ public class TransferService {
 
     private final TransferRepository transferRepository;
     private final CurrencyService currencyService;
-    private final PlayerService playerService;
-    private final ApplicationScriptService applicationScriptService;
+    private final PlayerPriceAsyncService playerPriceAsyncService;
 
     public TransferService(
         TransferRepository transferRepository,
         CurrencyService currencyService,
-        PlayerService playerService,
-        ApplicationScriptService applicationScriptService
+        PlayerPriceAsyncService playerPriceAsyncService
     ) {
         this.transferRepository = transferRepository;
         this.currencyService = currencyService;
-        this.playerService = playerService;
-        this.applicationScriptService = applicationScriptService;
+        this.playerPriceAsyncService = playerPriceAsyncService;
     }
 
     public List<Transfer> findAll() {
@@ -40,26 +35,18 @@ public class TransferService {
         return transferRepository.findById(id).orElseThrow(() -> new RuntimeException("Transfer not found"));
     }
 
-    // Player.marketValue is updated via the compiled ApplicationScript
-    // named ApplicationScriptService.PLAYER_PRICE_SCRIPT_NAME (see runPlayerPriceScript below).
     public Transfer save(Transfer transfer) {
         validateCurrency(transfer);
         Transfer saved = transferRepository.save(transfer);
-        runPlayerPriceScript(saved);
+        playerPriceAsyncService.runPlayerPriceScriptAsync(saved.getPlayer().getId(), saved.getId());
         return saved;
     }
 
     public Transfer update(Transfer transfer) {
         validateCurrency(transfer);
         Transfer saved = transferRepository.save(transfer);
-        runPlayerPriceScript(saved);
+        playerPriceAsyncService.runPlayerPriceScriptAsync(saved.getPlayer().getId(), saved.getId());
         return saved;
-    }
-
-    private void runPlayerPriceScript(Transfer transfer) {
-        Player player = playerService.findOne(transfer.getPlayer().getId());
-        applicationScriptService.updatePlayerPrice(player, transfer);
-        playerService.save(player);
     }
 
     public void delete(Long id) {
