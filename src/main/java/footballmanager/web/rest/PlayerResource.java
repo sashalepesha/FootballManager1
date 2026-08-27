@@ -2,9 +2,13 @@ package footballmanager.web.rest;
 
 import footballmanager.domain.Player;
 import footballmanager.service.PlayerService;
-import org.springframework.web.bind.annotation.*;
-
+import footballmanager.service.PlayerService.PagedPlayers;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/players")
@@ -17,8 +21,18 @@ public class PlayerResource {
     }
 
     @GetMapping
-    public List<Player> getAll() {
-        return playerService.findAll();
+    public ResponseEntity<List<Player>> getAll(@PageableDefault(size = 20, sort = "lastName") Pageable pageable) {
+        long start = System.currentTimeMillis();
+        PagedPlayers page = playerService.findAll(pageable);
+        long elapsedMs = System.currentTimeMillis() - start;
+        System.out.println(
+            "GET /api/players page=" + pageable.getPageNumber() + " size=" + pageable.getPageSize() + " took " + elapsedMs + " ms"
+        );
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-Total-Count", String.valueOf(page.totalElements()));
+        headers.add("X-Total-Pages", String.valueOf(page.totalPages()));
+        return ResponseEntity.ok().headers(headers).body(page.content());
     }
 
     @GetMapping("/{id}")
@@ -37,10 +51,7 @@ public class PlayerResource {
     }
 
     @PutMapping("/{id}")
-    public Player update(
-        @PathVariable Long id,
-        @RequestBody Player player
-    ) {
+    public Player update(@PathVariable Long id, @RequestBody Player player) {
         return playerService.save(player);
     }
 

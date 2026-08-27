@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface Player {
@@ -19,6 +19,12 @@ export interface Player {
   team?: any;
 }
 
+export interface PagedPlayers {
+  players: Player[];
+  totalCount: number;
+  totalPages: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -29,6 +35,24 @@ export class PlayerService {
 
   getAll(): Observable<Player[]> {
     return this.http.get<Player[]>(this.api);
+  }
+
+  getPage(page: number, size: number): Observable<PagedPlayers> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+
+    return new Observable<PagedPlayers>(subscriber => {
+      this.http.get<Player[]>(this.api, { params, observe: 'response' }).subscribe({
+        next: (res: HttpResponse<Player[]>) => {
+          subscriber.next({
+            players: res.body ?? [],
+            totalCount: Number(res.headers.get('X-Total-Count') ?? 0),
+            totalPages: Number(res.headers.get('X-Total-Pages') ?? 0),
+          });
+          subscriber.complete();
+        },
+        error: err => subscriber.error(err),
+      });
+    });
   }
 
   getByTeam(teamId: number): Observable<Player[]> {

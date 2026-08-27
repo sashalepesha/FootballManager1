@@ -21,6 +21,8 @@ logging:
     footballmanager: DEBUG
 
 spring:
+  cache:
+    type: redis
   devtools:
     restart:
       enabled: true
@@ -41,6 +43,10 @@ spring:
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev, faker
+  data:
+    redis:
+      host: fm_redis
+      port: 6379
   mail:
     host: localhost
     port: 25

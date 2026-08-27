@@ -15,6 +15,11 @@ export class PlayersComponent implements OnInit {
   players: Player[] = [];
   teams: Team[] = [];
 
+  page = 0;
+  pageSize = 20;
+  totalCount = 0;
+  totalPages = 0;
+
   newPlayer: Player = {
     firstName: '',
     lastName: '',
@@ -38,9 +43,32 @@ export class PlayersComponent implements OnInit {
   }
 
   load(): void {
-    this.playerService.getAll().subscribe(res => {
-      this.players = res;
+    this.playerService.getPage(this.page, this.pageSize).subscribe(res => {
+      this.players = res.players;
+      this.totalCount = res.totalCount;
+      this.totalPages = res.totalPages;
     });
+  }
+
+  goToPage(page: number): void {
+    if (page < 0 || page >= this.totalPages || page === this.page) {
+      return;
+    }
+    this.page = page;
+    this.load();
+  }
+
+  nextPage(): void {
+    this.goToPage(this.page + 1);
+  }
+
+  previousPage(): void {
+    this.goToPage(this.page - 1);
+  }
+
+  onPageSizeChange(): void {
+    this.page = 0;
+    this.load();
   }
 
   loadTeams(): void {
