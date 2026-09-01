@@ -14,16 +14,21 @@ import org.springframework.stereotype.Service;
 public class PlayerService {
 
     private final PlayerRepository playerRepository;
+    private final PlayerCacheVersionService playerCacheVersionService;
 
-    public PlayerService(PlayerRepository playerRepository) {
+    public PlayerService(PlayerRepository playerRepository, PlayerCacheVersionService playerCacheVersionService) {
         this.playerRepository = playerRepository;
+        this.playerCacheVersionService = playerCacheVersionService;
     }
 
     public List<Player> findAll() {
         return playerRepository.findAll();
     }
 
-    @Cacheable(value = "players", key = "#pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort")
+    @Cacheable(
+        value = "players",
+        key = "@playerCacheVersionService.currentVersion + '-' +#pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort"
+    )
     public PagedPlayers findAll(Pageable pageable) {
         Page<Player> page = playerRepository.findAll(pageable);
         return new PagedPlayers(page.getContent(), page.getTotalElements(), page.getTotalPages());
@@ -33,14 +38,15 @@ public class PlayerService {
         return playerRepository.findByTeamId(teamId);
     }
 
-    @CacheEvict(value = "players", allEntries = true)
     public Player save(Player player) {
-        return playerRepository.save(player);
+        Player saved = playerRepository.save(player);
+        playerCacheVersionService.incrementVersion();
+        return saved;
     }
 
-    @CacheEvict(value = "players", allEntries = true)
     public void delete(Long id) {
         playerRepository.deleteById(id);
+        playerCacheVersionService.incrementVersion();
     }
 
     public Player findOne(Long id) {
