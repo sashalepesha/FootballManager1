@@ -4,7 +4,6 @@ import footballmanager.domain.Player;
 import footballmanager.repository.PlayerRepository;
 import java.io.Serializable;
 import java.util.List;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +48,7 @@ public class PlayerService {
         playerCacheVersionService.incrementVersion();
     }
 
+    @Cacheable(value = "player", key = "#id")
     public Player findOne(Long id) {
         return playerRepository.findById(id).orElseThrow();
     }

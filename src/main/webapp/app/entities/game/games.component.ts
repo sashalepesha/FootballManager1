@@ -15,6 +15,11 @@ export class GamesComponent implements OnInit {
   games: Game[] = [];
   teams: Team[] = [];
 
+  page = 0;
+  pageSize = 20;
+  totalCount = 0;
+  totalPages = 0;
+
   generating = false;
   generateError = '';
 
@@ -38,9 +43,32 @@ export class GamesComponent implements OnInit {
   }
 
   load(): void {
-    this.gameService.getAll().subscribe(res => {
-      this.games = res;
+    this.gameService.getPage(this.page, this.pageSize).subscribe(res => {
+      this.games = res.games;
+      this.totalCount = res.totalCount;
+      this.totalPages = res.totalPages;
     });
+  }
+
+  goToPage(page: number): void {
+    if (page < 0 || page >= this.totalPages || page === this.page) {
+      return;
+    }
+    this.page = page;
+    this.load();
+  }
+
+  nextPage(): void {
+    this.goToPage(this.page + 1);
+  }
+
+  previousPage(): void {
+    this.goToPage(this.page - 1);
+  }
+
+  onPageSizeChange(): void {
+    this.page = 0;
+    this.load();
   }
 
   loadTeams(): void {
