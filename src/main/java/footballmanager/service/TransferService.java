@@ -3,6 +3,7 @@ package footballmanager.service;
 import footballmanager.domain.Transfer;
 import footballmanager.exception.InvalidCurrencyException;
 import footballmanager.repository.TransferRepository;
+import footballmanager.security.SecurityUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -38,14 +39,16 @@ public class TransferService {
     public Transfer save(Transfer transfer) {
         validateCurrency(transfer);
         Transfer saved = transferRepository.save(transfer);
-        playerPriceAsyncService.runPlayerPriceScriptAsync(saved.getPlayer().getId(), saved.getId());
+        String username = SecurityUtils.getCurrentUserLoginOrAnonymous();
+        playerPriceAsyncService.runPlayerPriceScriptAsync(saved.getPlayer().getId(), saved.getId(), username);
         return saved;
     }
 
     public Transfer update(Transfer transfer) {
         validateCurrency(transfer);
         Transfer saved = transferRepository.save(transfer);
-        playerPriceAsyncService.runPlayerPriceScriptAsync(saved.getPlayer().getId(), saved.getId());
+        String username = SecurityUtils.getCurrentUserLoginOrAnonymous();
+        playerPriceAsyncService.runPlayerPriceScriptAsync(saved.getPlayer().getId(), saved.getId(), username);
         return saved;
     }
 

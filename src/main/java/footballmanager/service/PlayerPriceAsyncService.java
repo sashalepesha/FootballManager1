@@ -31,14 +31,14 @@ public class PlayerPriceAsyncService {
 
     @Async("playerPriceTaskExecutor")
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void runPlayerPriceScriptAsync(Long playerId, Long transferId) {
+    public void runPlayerPriceScriptAsync(Long playerId, Long transferId, String username) {
         log.info("runPlayerPriceScriptAsync() running in thread: {}", Thread.currentThread().getName());
-        Player player = playerService.findOne(playerId);
+        Player player = playerService.internalFindOne(playerId);
         Transfer transfer = transferRepository.findById(transferId).orElseThrow(() -> new RuntimeException("Transfer not found"));
 
         try {
             applicationScriptService.updatePlayerPrice(player, transfer);
-            playerService.save(player);
+            playerService.internalSave(player, username);
         } catch (Exception e) {
             log.error("Failed to update player price for transfer id={}: {} ", transferId, e.getMessage(), e);
         }

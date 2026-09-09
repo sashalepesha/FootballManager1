@@ -4,6 +4,7 @@ import footballmanager.domain.Game;
 import footballmanager.domain.Team;
 import footballmanager.repository.GameRepository;
 import footballmanager.repository.TeamRepository;
+import footballmanager.security.SecurityUtils;
 import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -37,7 +38,9 @@ public class GameService {
 
     @Cacheable(
         value = "games",
-        key = "@gameCacheVersionService.currentVersion + '-' +#pageable.pageNumber + '-' +#pageable.pageSize + '-' + #pageable.sort "
+        key = "T(footballmanager.security.SecurityUtils).getCurrentUserLoginOrAnonymous() + " +
+            "'-v' + @gameCacheVersionService.getCurrentVersion(T(footballmanager.security.SecurityUtils).getCurrentUserLoginOrAnonymous()) + " +
+            "'-' + #pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort"
     )
     public PagedGames findAll(Pageable pageable) {
         Page<Game> page = gameRepository.findAll(pageable);
@@ -53,24 +56,24 @@ public class GameService {
     }
 
     public Game save(Game game) {
-        gameCacheVersionService.incrementVersion();
+        gameCacheVersionService.incrementVersion(SecurityUtils.getCurrentUserLoginOrAnonymous());
         return gameRepository.save(game);
     }
 
     public void delete(Long id) {
-        gameCacheVersionService.incrementVersion();
+        gameCacheVersionService.incrementVersion(SecurityUtils.getCurrentUserLoginOrAnonymous());
         gameRepository.deleteById(id);
     }
 
     public void deleteAll() {
-        gameCacheVersionService.incrementVersion();
+        gameCacheVersionService.incrementVersion(SecurityUtils.getCurrentUserLoginOrAnonymous());
         gameRepository.deleteAllInBatch();
     }
 
     public record PagedGames(List<Game> content, long totalElements, long totalPages) implements Serializable {}
 
     public int generateRandom(int count) {
-        gameCacheVersionService.incrementVersion();
+        gameCacheVersionService.incrementVersion(SecurityUtils.getCurrentUserLoginOrAnonymous());
         List<Team> teams = teamRepository.findAll();
 
         if (teams.size() < 2) {

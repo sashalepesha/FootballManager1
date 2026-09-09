@@ -7,18 +7,21 @@ import org.springframework.stereotype.Service;
 public class GameCacheVersionService {
 
     private final StringRedisTemplate redisTemplate;
-    private static final String VERSION_KEY = "games:cache-version";
 
     public GameCacheVersionService(StringRedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
-    public long getCurrentVersion() {
-        String value = redisTemplate.opsForValue().get(VERSION_KEY);
+    public long getCurrentVersion(String username) {
+        String value = redisTemplate.opsForValue().get(versionKeyFor(username));
         return value == null ? 0L : Long.parseLong(value);
     }
 
-    public void incrementVersion() {
-        redisTemplate.opsForValue().increment(VERSION_KEY);
+    public void incrementVersion(String username) {
+        redisTemplate.opsForValue().increment(versionKeyFor(username));
+    }
+
+    private String versionKeyFor(String username) {
+        return "games:cache-version:" + username;
     }
 }

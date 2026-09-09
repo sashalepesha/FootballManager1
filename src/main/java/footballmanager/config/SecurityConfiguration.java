@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.function.Supplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -87,6 +88,17 @@ public class SecurityConfiguration {
                     .requestMatchers("/api/account/reset-password/finish").permitAll()
 
                     .requestMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
+
+                    .requestMatchers(HttpMethod.GET, "/api/players/**", "/api/teams/**", "/api/games/**", "/api/transfers/**")
+                        .hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.MANAGER, AuthoritiesConstants.USER)
+                    .requestMatchers(HttpMethod.POST, "/api/players/**", "/api/games/**", "/api/teams/**", "/api/transfers/**")
+                    .hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.MANAGER)
+                    .requestMatchers(HttpMethod.PUT, "/api/players/**", "/api/games/**", "/api/teams/**", "/api/transfers/**")
+                    .hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.MANAGER)
+                    .requestMatchers(HttpMethod.DELETE, "/api/players/**", "/api/games/**", "/api/teams/**", "/api/transfers/**")
+                    .hasAnyAuthority(AuthoritiesConstants.ADMIN, AuthoritiesConstants.MANAGER)
+
+
                     .requestMatchers("/api/**").authenticated()
 
                     .requestMatchers("/management/health").permitAll()
