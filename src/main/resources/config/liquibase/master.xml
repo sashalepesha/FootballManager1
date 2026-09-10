@@ -20,6 +20,7 @@
   <include file="config/liquibase/changelog/006_add_game_home_team_index.xml"/>
   <include file="config/liquibase/changelog/007_create_application_script.xml"/>
   <include file="config/liquibase/changelog/008_add_manager_role_and_users.xml"/>
+  <include file="config/liquibase/changelog/009_add_team_manager.xml"/>
 
   <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
   <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->

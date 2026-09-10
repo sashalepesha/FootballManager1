@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+      http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet id="009-1-add-team-manager-column" author="sasha">
+    <addColumn tableName="team">
+      <column name="manager_id" type="bigint"/>
+    </addColumn>
+
+    <addForeignKeyConstraint
+      baseTableName="team"
+      baseColumnNames="manager_id"
+      constraintName="fk_team_manager_id"
+      referencedTableName="jhi_user"
+      referencedColumnNames="id"
+      onDelete="SET NULL"/>
+
+    <createIndex indexName="idx_team_manager_id" tableName="team">
+      <column name="manager_id"/>
+    </createIndex>
+  </changeSet>
+
+  <changeSet id="009-2-assign-teams-to-managers" author="sasha">
+    <sql>
+      UPDATE team SET manager_id = 3 WHERE id IN (SELECT id FROM team ORDER BY id LIMIT (SELECT COUNT(*) / 2 FROM team));
+      UPDATE team SET manager_id = 4 WHERE manager_id IS NULL;
+    </sql>
+  </changeSet>
+
+</databaseChangeLog>

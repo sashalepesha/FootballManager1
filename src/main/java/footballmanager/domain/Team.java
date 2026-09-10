@@ -38,6 +38,10 @@ public class Team implements Serializable {
     @OneToMany(mappedBy = "team")
     private Set<Player> players = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private User manager;
+
     public Long getId() {
         return id;
     }
@@ -104,5 +108,13 @@ public class Team implements Serializable {
 
     public void setPlayers(Set<Player> players) {
         this.players = players;
+    }
+
+    public User getManager() {
+        return manager;
+    }
+
+    public void setManager(User manager) {
+        this.manager = manager;
     }
 }

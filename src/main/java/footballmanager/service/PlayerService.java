@@ -34,7 +34,9 @@ public class PlayerService {
             "'-' + #pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort"
     )
     public PagedPlayers findAll(Pageable pageable) {
-        Page<Player> page = playerRepository.findAll(pageable);
+        Page<Player> page = SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN)
+            ? playerRepository.findAll(pageable)
+            : playerRepository.findAllByTeam_Manager_Login(SecurityUtils.getCurrentUserLoginOrAnonymous(), pageable);
         return new PagedPlayers(page.getContent(), page.getTotalElements(), page.getTotalPages());
     }
 

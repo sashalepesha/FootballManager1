@@ -4,6 +4,7 @@ import footballmanager.domain.Game;
 import footballmanager.domain.Team;
 import footballmanager.repository.GameRepository;
 import footballmanager.repository.TeamRepository;
+import footballmanager.security.AuthoritiesConstants;
 import footballmanager.security.SecurityUtils;
 import java.io.Serializable;
 import java.time.Instant;
@@ -43,7 +44,9 @@ public class GameService {
             "'-' + #pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort"
     )
     public PagedGames findAll(Pageable pageable) {
-        Page<Game> page = gameRepository.findAll(pageable);
+        Page<Game> page = SecurityUtils.hasCurrentUserThisAuthority(AuthoritiesConstants.ADMIN)
+            ? gameRepository.findAll(pageable)
+            : gameRepository.findAllByManagerLogin(SecurityUtils.getCurrentUserLoginOrAnonymous(), pageable);
         return new PagedGames(page.getContent(), page.getTotalElements(), page.getTotalPages());
     }
 
