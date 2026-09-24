@@ -1,0 +1,9 @@
+  <!ELEMENT player-list (player+)>
+  <!ELEMENT player (firstName, lastName, birthDate?, nationality?, position?, marketValue?, teamId?)>
+  <!ELEMENT firstName (#PCDATA)>
+  <!ELEMENT lastName (#PCDATA)>
+  <!ELEMENT birthDate (#PCDATA)>
+  <!ELEMENT nationality (#PCDATA)>
+  <!ELEMENT position (#PCDATA)>
+  <!ELEMENT marketValue (#PCDATA)>
+  <!ELEMENT teamId (#PCDATA)>

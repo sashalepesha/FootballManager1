@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 
 import { Player, PlayerService } from './player.service';
 import { Team, TeamService } from '../../team.service';
+import { ImportButtonComponent } from '../import/import-button.component';
 
 @Component({
   selector: 'app-players',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ImportButtonComponent],
   templateUrl: './players.component.html',
 })
 export class PlayersComponent implements OnInit {
@@ -119,5 +120,10 @@ export class PlayersComponent implements OnInit {
     this.playerService.delete(id).subscribe(() => {
       this.load();
     });
+  }
+
+  onPlayersImported(): void {
+    this.page = 0;
+    this.load();
   }
 }

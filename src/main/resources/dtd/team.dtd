@@ -1,0 +1,6 @@
+  <!ELEMENT team-list (team+)>
+  <!ELEMENT team (name, city?, stadium?, budget?)>
+  <!ELEMENT name (#PCDATA)>
+  <!ELEMENT city (#PCDATA)>
+  <!ELEMENT stadium (#PCDATA)>
+  <!ELEMENT budget (#PCDATA)>

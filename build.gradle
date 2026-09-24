@@ -69,6 +69,7 @@ dependencies {
   implementation "org.springframework.security:spring-security-data"
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+  implementation 'org.apache.commons:commons-csv:1.11.0'
   implementation "com.zaxxer:HikariCP"
   implementation "io.micrometer:micrometer-registry-prometheus-simpleclient"
   implementation "org.apache.commons:commons-lang3"

@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { TeamService, Team } from './team.service';
+import { ImportButtonComponent } from './entities/import/import-button.component';
 
 @Component({
   selector: 'app-teams',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ImportButtonComponent],
   templateUrl: './teams.component.html',
 })
 export class TeamsComponent implements OnInit {
@@ -57,5 +58,9 @@ export class TeamsComponent implements OnInit {
     this.teamService.delete(id).subscribe(() => {
       this.load();
     });
+  }
+
+  onTeamsImported(): void {
+    this.load();
   }
 }

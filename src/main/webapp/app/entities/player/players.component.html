@@ -1,6 +1,10 @@
 <div class="container py-4">
   <h2 class="page-title">🏃 Players</h2>
 
+  <div class="mb-3">
+    <app-import-button entityType="player" entityLabel="игроков" (imported)="onPlayersImported()"></app-import-button>
+  </div>
+
   <div class="football-card mb-4">
     <div class="football-header">Create Player</div>
 
