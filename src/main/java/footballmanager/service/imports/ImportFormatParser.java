@@ -8,5 +8,5 @@ import java.util.Map;
 public interface ImportFormatParser {
     boolean supports(String fileName);
 
-    List<Map<String, String>> parse(InputStream inputStream, String entityType) throws IOException;
+    List<Map<String, Object>> parse(InputStream inputStream, String entityType) throws IOException;
 }

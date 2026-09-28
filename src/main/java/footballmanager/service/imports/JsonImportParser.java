@@ -18,7 +18,13 @@ public class JsonImportParser implements ImportFormatParser {
         return fileName != null && fileName.endsWith(".json");
     }
 
-    public List<Map<String, String>> parse(InputStream inputStream, String entityType) throws IOException {
-        return objectMapper.readValue(inputStream, new TypeReference<List<Map<String, String>>>() {});
+    public List<Map<String, Object>> parse(InputStream inputStream, String entityType) throws IOException {
+        com.fasterxml.jackson.databind.JsonNode root = objectMapper.readTree(inputStream);
+        if (root.isArray()) {
+            return objectMapper.convertValue(root, new TypeReference<List<Map<String, Object>>>() {});
+        }
+
+        Map<String, Object> single = objectMapper.convertValue(root, new TypeReference<Map<String, Object>>() {});
+        return List.of(single);
     }
 }

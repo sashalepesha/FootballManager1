@@ -28,7 +28,7 @@ public class XmlImportParser implements ImportFormatParser {
     }
 
     @Override
-    public List<Map<String, String>> parse(InputStream inputStream, String entityType) throws IOException {
+    public List<Map<String, Object>> parse(InputStream inputStream, String entityType) throws IOException {
         byte[] fileBytes = inputStream.readAllBytes();
         List<String> validationErrors = new ArrayList<>();
 
@@ -72,15 +72,18 @@ public class XmlImportParser implements ImportFormatParser {
             }
 
             document.getDocumentElement().normalize();
+            Element root = document.getDocumentElement();
 
-            List<Map<String, String>> records = new ArrayList<>();
-            NodeList rootChildren = document.getDocumentElement().getChildNodes();
-            for (int i = 0; i < rootChildren.getLength(); i++) {
-                Node recordNode = rootChildren.item(i);
-                if (recordNode.getNodeType() != Node.ELEMENT_NODE) {
-                    continue;
+            List<Element> rootChildren = childElements(root);
+            boolean rootIsListOfRecords = !root.getNodeName().equalsIgnoreCase(entityType) && !rootChildren.isEmpty();
+
+            List<Map<String, Object>> records = new ArrayList<>();
+            if (rootIsListOfRecords) {
+                for (Element child : rootChildren) {
+                    records.add(elementToMap(child));
                 }
-                records.add(elementToMap((Element) recordNode));
+            } else {
+                records.add(elementToMap(root));
             }
             return records;
         } catch (ParserConfigurationException | SAXException e) {
@@ -88,15 +91,70 @@ public class XmlImportParser implements ImportFormatParser {
         }
     }
 
-    private Map<String, String> elementToMap(Element recordElement) {
-        Map<String, String> record = new LinkedHashMap<>();
-        NodeList fields = recordElement.getChildNodes();
-        for (int i = 0; i < fields.getLength(); i++) {
-            Node fieldNode = fields.item(i);
-            if (fieldNode.getNodeType() == Node.ELEMENT_NODE) {
-                record.put(fieldNode.getNodeName(), fieldNode.getTextContent().trim());
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> elementToMap(Element element) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        Map<String, List<Element>> childrenByTag = new LinkedHashMap<>();
+
+        for (Element child : childElements(element)) {
+            childrenByTag.computeIfAbsent(child.getNodeName(), k -> new ArrayList<>()).add(child);
+        }
+
+        for (Map.Entry<String, List<Element>> entry : childrenByTag.entrySet()) {
+            String tag = entry.getKey();
+            List<Element> siblings = entry.getValue();
+
+            if (siblings.size() > 1) {
+                List<Object> list = new ArrayList<>();
+                for (Element sibling : siblings) {
+                    list.add(childElements(sibling).isEmpty() ? sibling.getTextContent().trim() : elementToMap(sibling));
+                }
+                result.put(tag, list);
+            } else {
+                Element only = siblings.get(0);
+                if (childElements(only).isEmpty()) {
+                    result.put(tag, only.getTextContent().trim());
+                } else if (hasRepeatedGrandchildTag(only)) {
+                    Map<String, Object> wrapped = elementToMap(only);
+
+                    if (wrapped.size() == 1) {
+                        result.put(tag, wrapped.values().iterator().next());
+                    } else {
+                        result.put(tag, wrapped);
+                    }
+                } else {
+                    result.put(tag, elementToMap(only));
+                }
             }
         }
-        return record;
+        return result;
+    }
+
+    private boolean hasRepeatedGrandchildTag(Element element) {
+        Map<String, Integer> counts = new LinkedHashMap<>();
+        for (Element child : childElements(element)) {
+            counts.merge(child.getNodeName(), 1, Integer::sum);
+        }
+        return counts
+            .values()
+            .stream()
+            .anyMatch(c -> c > 1);
+    }
+
+    private boolean sameTagName(List<Element> elements) {
+        String first = elements.get(0).getNodeName();
+        return elements.stream().allMatch(e -> e.getNodeName().equals(first));
+    }
+
+    private List<Element> childElements(Element element) {
+        List<Element> children = new ArrayList<>();
+        NodeList nodeList = element.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                children.add((Element) node);
+            }
+        }
+        return children;
     }
 }

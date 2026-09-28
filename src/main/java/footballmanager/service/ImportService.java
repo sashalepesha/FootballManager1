@@ -39,7 +39,7 @@ public class ImportService {
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Неподдерживаемый формат файла: " + file.getOriginalFilename()));
 
-        List<Map<String, String>> records;
+        List<Map<String, Object>> records;
         try (InputStream inputStream = file.getInputStream()) {
             records = parser.parse(inputStream, entityType);
         }
@@ -47,12 +47,11 @@ public class ImportService {
         return mapAndSave(importer, records);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> ImportResult mapAndSave(EntityImporter<T> importer, List<Map<String, String>> records) {
+    private <T> ImportResult mapAndSave(EntityImporter<T> importer, List<Map<String, Object>> records) {
         List<T> toSave = new ArrayList<>();
         List<String> errors = new ArrayList<>();
 
-        for (Map<String, String> record : records) {
+        for (Map<String, Object> record : records) {
             try {
                 toSave.add(importer.mapRecord(record));
             } catch (ImportRecordException e) {

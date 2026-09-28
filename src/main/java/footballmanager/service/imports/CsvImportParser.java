@@ -21,8 +21,8 @@ public class CsvImportParser implements ImportFormatParser {
     }
 
     @Override
-    public List<Map<String, String>> parse(InputStream inputStream, String entityType) throws IOException {
-        List<Map<String, String>> records = new ArrayList<>();
+    public List<Map<String, Object>> parse(InputStream inputStream, String entityType) throws IOException {
+        List<Map<String, Object>> records = new ArrayList<>();
         CSVFormat format = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).setTrim(true).build();
 
         try (
@@ -30,7 +30,7 @@ public class CsvImportParser implements ImportFormatParser {
             CSVParser parser = new CSVParser(reader, format)
         ) {
             for (CSVRecord csvRecord : parser) {
-                records.add(csvRecord.toMap());
+                records.add(new java.util.LinkedHashMap<>(csvRecord.toMap()));
             }
         }
         return records;
