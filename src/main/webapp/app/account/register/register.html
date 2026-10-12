@@ -33,6 +33,7 @@
             <label class="form-label" for="login">Username</label>
             <input
               type="text"
+              #login
               class="form-control"
               id="login"
               name="login"
@@ -82,7 +83,7 @@
                   <small class="form-text text-danger">Your email is required.</small>
                 }
 
-                @if (emailRef?.errors?.invalid) {
+                @if (emailRef?.errors?.email) {
                   <small class="form-text text-danger">Your email is invalid.</small>
                 }
 

@@ -3,7 +3,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { finalize } from 'rxjs/operators';
+import { finalize } from 'rxjs';
 
 import { SortByDirective, SortDirective, SortService, sortStateSignal } from 'app/shared/sort';
 

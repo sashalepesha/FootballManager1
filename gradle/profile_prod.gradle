@@ -16,13 +16,22 @@ bootRun {
     args = ["--spring.profiles.active=${springProfiles}"]
 }
 
-task webapp(type: NpmTask) {
+def webapp = tasks.register('webapp', NpmTask) {
     dependsOn(npmInstall)
+
+    outputs.dir(layout.buildDirectory.dir("generated/webapp/"))
+        .withPropertyName("webapp-build-dir")
+    outputs.upToDateWhen { false }
+
     args = ["run", "webapp:prod"]
     environment = [APP_VERSION: project.version]
 }
 
 processResources {
+    from(webapp) {
+        into "static"
+    }
+
     inputs.property('version', version)
     inputs.property('springProfiles', springProfiles)
     filesMatching("**/application.yml") {
@@ -35,12 +44,14 @@ processResources {
     }
 }
 
-task integrationTest(type: Test) {
+def integrationTest = tasks.register('integrationTest', Test) {
     maxHeapSize = "1G"
     useJUnitPlatform()
     description = "Execute integration tests."
     group = "verification"
     include "**/*IT*", "**/*IntTest*"
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
     testLogging {
         events = ['FAILED', 'SKIPPED']
         exceptionFormat = "full"
@@ -50,8 +61,5 @@ task integrationTest(type: Test) {
     // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
     // ignoreFailures true
     reports.html.required = false
+    dependsOn(tasks.named('test'))
 }
-integrationTest.dependsOn(test)
-
-processResources.dependsOn(webapp)
-bootJar.dependsOn(processResources)

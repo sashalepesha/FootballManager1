@@ -16,7 +16,7 @@ import { ConfigurationService } from './configuration.service';
 })
 export default class Configuration implements OnInit {
   readonly allBeans = signal<Bean[] | undefined>(undefined);
-  readonly beansFilter = signal<string>('');
+  readonly beansFilter = signal('');
   readonly propertySources = signal<PropertySource[]>([]);
   sortState = sortStateSignal({ predicate: 'prefix', order: 'asc' });
   readonly beans = computed(() => {

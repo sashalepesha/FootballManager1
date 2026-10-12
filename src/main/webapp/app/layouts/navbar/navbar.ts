@@ -6,10 +6,10 @@ import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap/collapse';
 import { NgbDropdown, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap/dropdown';
 import { environment } from 'environments/environment';
 
-import { AccountService } from 'app/core/auth/account.service';
+import { AccountService } from 'app/core/auth';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { LoginService } from 'app/login/login.service';
-import HasAnyAuthorityDirective from 'app/shared/auth/has-any-authority.directive';
+import { HasAnyAuthorityDirective } from 'app/shared/auth';
 
 @Component({
   selector: 'jhi-navbar',

@@ -14,7 +14,7 @@ export class JvmMemory {
   /**
    * Object containing all jvm memory metrics
    */
-  jvmMemoryMetrics = input<Record<string, JvmMetrics>>();
+  readonly jvmMemoryMetrics = input<Record<string, JvmMetrics>>();
 
   /**
    * Boolean field saying if the metrics are in the process of being updated

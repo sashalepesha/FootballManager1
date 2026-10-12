@@ -14,7 +14,7 @@ import { RegisterService } from './register.service';
   templateUrl: './register.html',
 })
 export default class Register implements AfterViewInit {
-  login = viewChild.required<ElementRef>('login');
+  readonly login = viewChild.required<ElementRef>('login');
 
   readonly doNotMatch = signal(false);
   readonly error = signal(false);

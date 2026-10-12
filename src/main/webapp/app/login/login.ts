@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnInit, inject, signal, viewChild
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
-import { AccountService } from 'app/core/auth/account.service';
+import { AccountService } from 'app/core/auth';
 import { LoginService } from 'app/login/login.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { LoginService } from 'app/login/login.service';
   templateUrl: './login.html',
 })
 export default class Login implements OnInit, AfterViewInit {
-  username = viewChild.required<ElementRef>('username');
+  readonly username = viewChild.required<ElementRef>('username');
 
   readonly authenticationError = signal(false);
 

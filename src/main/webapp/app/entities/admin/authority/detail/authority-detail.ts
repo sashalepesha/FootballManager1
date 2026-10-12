@@ -2,8 +2,7 @@ import { Component, input } from '@angular/core';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-import { Alert } from 'app/shared/alert/alert';
-import { AlertError } from 'app/shared/alert/alert-error';
+import { Alert, AlertError } from 'app/shared/alert';
 import { IAuthority } from '../authority.model';
 
 @Component({
