@@ -13,7 +13,8 @@ import java.util.Set;
 public class Team implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "team_seq_generator")
+    @SequenceGenerator(name = "team_seq_generator", sequenceName = "team_id_seq", allocationSize = 50)
     private Long id;
 
     @NotBlank

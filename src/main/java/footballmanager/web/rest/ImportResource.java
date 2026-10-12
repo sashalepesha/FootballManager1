@@ -26,12 +26,15 @@ public class ImportResource {
 
     @PostMapping("/{entityType}")
     @PreAuthorize("hasAnyAuthority('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.MANAGER + "')")
-    public ResponseEntity<ImportResult> importEntity(@PathVariable String entityType, @RequestParam("file") MultipartFile file)
-        throws IOException {
+    public ResponseEntity<ImportResult> importEntity(
+        @PathVariable String entityType,
+        @RequestParam("file") MultipartFile file,
+        @RequestParam(defaultValue = "false") boolean bulk
+    ) throws IOException {
         if (file.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
-        ImportResult result = importService.importFile(entityType, file);
+        ImportResult result = importService.importFile(entityType, file, bulk);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

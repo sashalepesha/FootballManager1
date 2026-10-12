@@ -11,7 +11,8 @@ import java.time.LocalDate;
 public class Player implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_seq_generator")
+    @SequenceGenerator(name = "player_seq_generator", sequenceName = "player_id_seq", allocationSize = 50)
     private Long id;
 
     @NotBlank

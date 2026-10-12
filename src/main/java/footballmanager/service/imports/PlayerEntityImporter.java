@@ -4,6 +4,7 @@ import footballmanager.domain.Player;
 import footballmanager.domain.Team;
 import footballmanager.repository.PlayerRepository;
 import footballmanager.repository.TeamRepository;
+import footballmanager.service.BatchImportService;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -13,10 +14,12 @@ public class PlayerEntityImporter implements EntityImporter<Player> {
 
     private final PlayerRepository playerRepository;
     private final TeamRepository teamRepository;
+    private final BatchImportService batchImportService;
 
-    public PlayerEntityImporter(PlayerRepository playerRepository, TeamRepository teamRepository) {
+    public PlayerEntityImporter(PlayerRepository playerRepository, TeamRepository teamRepository, BatchImportService batchImportService) {
         this.playerRepository = playerRepository;
         this.teamRepository = teamRepository;
+        this.batchImportService = batchImportService;
     }
 
     @Override
@@ -50,6 +53,18 @@ public class PlayerEntityImporter implements EntityImporter<Player> {
 
     @Override
     public void saveAll(List<Player> entities) {
-        playerRepository.saveAll(entities);
+        if (entities.isEmpty()) {
+            return;
+        }
+
+        batchImportService.saveAllWithoutBatch(entities, playerRepository::saveAll);
+    }
+
+    @Override
+    public void batchSave(List<Player> entities, BatchImportService batchImportService) {
+        if (entities.isEmpty()) {
+            return;
+        }
+        batchImportService.batchImport(entities);
     }
 }

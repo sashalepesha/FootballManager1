@@ -111,6 +111,7 @@ public class SecurityConfiguration {
                     .requestMatchers("/management/prometheus").permitAll()
                     .requestMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
             )
+            .securityContext(securityContext -> securityContext.requireExplicitSave(false))
             .rememberMe(rememberMe ->
                 rememberMe
                     .rememberMeServices(rememberMeServices)
