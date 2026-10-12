@@ -169,13 +169,13 @@ public class PersistentTokenRememberMeServices extends AbstractRememberMeService
     private PersistentToken getPersistentToken(String[] cookieTokens) {
         if (cookieTokens.length != 2) {
             throw new InvalidCookieException(
-                "Cookie token did not contain " + 2 + " tokens, but contained '" + Arrays.asList(cookieTokens) + "'"
+                "Cookie token did not contain " + 2 + " tokens, but contained '" + List.of(cookieTokens) + "'"
             );
         }
         String presentedSeries = cookieTokens[0];
         String presentedToken = cookieTokens[1];
         Optional<PersistentToken> optionalToken = persistentTokenRepository.findById(presentedSeries);
-        if (!optionalToken.isPresent()) {
+        if (optionalToken.isEmpty()) {
             // No series match, so we can't authenticate using this cookie
             throw new RememberMeAuthenticationException("No persistent token found for series id: " + presentedSeries);
         }

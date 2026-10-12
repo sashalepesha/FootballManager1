@@ -49,8 +49,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
-        http
-            .cors(withDefaults())
+        http.cors(withDefaults())
             .csrf(csrf ->
                 csrf
                     .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())

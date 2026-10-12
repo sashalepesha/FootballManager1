@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile  # Путь от корня проекта до Dockerfile
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
-      - SPRING_PROFILES_ACTIVE=prod,api-docs
+      - SPRING_PROFILES_ACTIVE=prod,api-docs,secret-samples
       - MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED=true
       - SPRING_SECURITY_REMEMBER_ME_KEY=d8c9dff1f387e7bdd0442cf390797ada8b13e7be802e31fd23711fc6e4266353f06e5ade92c820aec42fa66bf7d4514696bc
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/footballManager
@@ -19,10 +19,10 @@ services:
       - 127.0.0.1:8080:8080
     healthcheck:
       test:
-        - CMD
-        - curl
-        - -f
-        - http://localhost:8080/management/health
+        - CMD-SHELL
+        - "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8080; printf \"GET
+          /management/health HTTP/1.0\\r\\nHost: localhost\\r\\n\\r\\n\" >&3;
+          grep -q \"\\\"status\\\":\\\"UP\\\"\" <&3'"
       interval: 5s
       timeout: 5s
       retries: 40

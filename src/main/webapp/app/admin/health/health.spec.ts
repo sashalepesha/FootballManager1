@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vitest } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -12,10 +12,6 @@ describe('Health', () => {
   let comp: Health;
   let fixture: ComponentFixture<Health>;
   let service: HealthService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(Health);
@@ -36,7 +32,7 @@ describe('Health', () => {
     it('should call refresh on init', () => {
       // GIVEN
       const health: HealthModel = { status: 'UP', components: { mail: { status: 'UP', details: { mailDetail: 'mail' } } } };
-      vitest.spyOn(service, 'checkHealth').mockReturnValue(of(health));
+      vi.spyOn(service, 'checkHealth').mockReturnValue(of(health));
 
       // WHEN
       comp.ngOnInit();
@@ -49,7 +45,7 @@ describe('Health', () => {
     it('should handle a 503 on refreshing health data', () => {
       // GIVEN
       const health: HealthModel = { status: 'DOWN', components: { mail: { status: 'DOWN' } } };
-      vitest.spyOn(service, 'checkHealth').mockReturnValue(throwError(() => new HttpErrorResponse({ status: 503, error: health })));
+      vi.spyOn(service, 'checkHealth').mockReturnValue(throwError(() => new HttpErrorResponse({ status: 503, error: health })));
 
       // WHEN
       comp.refresh();

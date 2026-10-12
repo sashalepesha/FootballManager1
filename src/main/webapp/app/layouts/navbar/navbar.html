@@ -8,12 +8,26 @@
         <div class="brand-subtitle">Sports Dashboard</div>
       </div>
     </a>
+<<<<<<< HEAD
 
     <button class="navbar-toggler" type="button" (click)="isNavbarCollapsed.update(isNavbarCollapsed => !isNavbarCollapsed)">
       <fa-icon icon="bars"></fa-icon>
     </button>
 
     <div class="collapse navbar-collapse" [ngbCollapse]="isNavbarCollapsed()">
+=======
+    <a
+      class="navbar-toggler d-lg-none"
+      href="javascript:void(0);"
+      aria-controls="navbarResponsive"
+      [attr.aria-expanded]="!isNavbarCollapsed()"
+      aria-label="Toggle navigation"
+      (click)="isNavbarCollapsed.update(isNavbarCollapsed => !isNavbarCollapsed)"
+    >
+      <fa-icon icon="bars" />
+    </a>
+    <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed()">
+>>>>>>> jhipster_upgrade
       <ul class="navbar-nav ms-auto">
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link football-link" routerLink="/" (click)="collapseNavbar()">
@@ -23,10 +37,26 @@
         </li>
 
         @if (account() !== null) {
+<<<<<<< HEAD
           <li ngbDropdown class="nav-item dropdown" display="dynamic" data-cy="entity">
             <a class="nav-link football-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0)">
               <fa-icon icon="list"></fa-icon>
               Football
+=======
+          <li
+            ngbDropdown
+            class="nav-item dropdown pointer"
+            display="static"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            data-cy="entity"
+          >
+            <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">
+              <span>
+                <fa-icon icon="th-list" />
+                <span>Entities</span>
+              </span>
+>>>>>>> jhipster_upgrade
             </a>
 
             <ul ngbDropdownMenu class="dropdown-menu football-dropdown">
@@ -48,15 +78,33 @@
             </ul>
           </li>
         }
+<<<<<<< HEAD
 
         <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown" display="dynamic">
           <a class="nav-link football-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0)">
             <fa-icon icon="cogs"></fa-icon>
             Admin
+=======
+        <li
+          *jhiHasAnyAuthority="'ROLE_ADMIN'"
+          ngbDropdown
+          class="nav-item dropdown pointer"
+          display="static"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          data-cy="adminMenu"
+        >
+          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">
+            <span>
+              <fa-icon icon="users-cog" />
+              <span>Administration</span>
+            </span>
+>>>>>>> jhipster_upgrade
           </a>
 
           <ul ngbDropdownMenu class="dropdown-menu football-dropdown">
             <li>
+<<<<<<< HEAD
               <a class="dropdown-item" routerLink="/user-management" (click)="collapseNavbar()">
                 <fa-icon icon="users"></fa-icon>
                 User Management
@@ -70,6 +118,32 @@
               </a>
             </li>
 
+=======
+              <a
+                class="dropdown-item"
+                routerLink="/user-management"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="asterisk" [fixedWidth]="true" />
+                <span>User Management</span>
+              </a>
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                routerLink="/authority"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="collapseNavbar()"
+              >
+                <fa-icon icon="asterisk" [fixedWidth]="true" />
+                <span>Authority</span>
+              </a>
+            </li>
+            <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
+>>>>>>> jhipster_upgrade
             <li>
               <a class="dropdown-item" routerLink="/admin/health" (click)="collapseNavbar()">
                 <fa-icon icon="heart"></fa-icon>
@@ -85,6 +159,7 @@
             </li>
           </ul>
         </li>
+<<<<<<< HEAD
 
         <li ngbDropdown class="nav-item dropdown" display="dynamic">
           <a class="nav-link football-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0)">
@@ -98,6 +173,31 @@
 
           <ul ngbDropdownMenu class="dropdown-menu football-dropdown">
             @if (account() !== null) {
+=======
+        <li
+          ngbDropdown
+          class="nav-item dropdown pointer"
+          display="static"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          data-cy="accountMenu"
+        >
+          @let accountRef = account();
+          <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
+            @if (!accountRef?.imageUrl) {
+              <span>
+                <fa-icon icon="user" />
+                <span>Account</span>
+              </span>
+            } @else {
+              <span>
+                <img [src]="accountRef.imageUrl" class="profile-image rounded-circle" alt="Avatar" />
+              </span>
+            }
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu aria-labelledby="account-menu">
+            @if (accountRef !== null) {
+>>>>>>> jhipster_upgrade
               <li>
                 <a class="dropdown-item" routerLink="/account/settings" (click)="collapseNavbar()">
                   <fa-icon icon="wrench"></fa-icon>

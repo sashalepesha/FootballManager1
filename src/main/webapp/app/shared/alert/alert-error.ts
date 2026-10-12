@@ -4,8 +4,7 @@ import { Component, OnDestroy, inject, signal } from '@angular/core';
 import { NgbAlert } from '@ng-bootstrap/ng-bootstrap/alert';
 import { Subscription } from 'rxjs';
 
-import { AlertModel, AlertService } from 'app/core/util/alert.service';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { AlertModel, AlertService, EventManager, EventWithContent } from 'app/core/util';
 import { getMessageFromHeaders } from 'app/shared/jhipster/headers';
 
 import { AlertErrorModel } from './alert-error.model';
@@ -24,12 +23,12 @@ export class AlertError implements OnDestroy {
   private readonly eventManager = inject(EventManager);
 
   constructor() {
-    this.errorListener = this.eventManager.subscribe('footballManagerApp.error', (response: EventWithContent<unknown> | string) => {
+    this.errorListener = this.eventManager.subscribe('footballManagerApp.error', (response: EventWithContent<unknown>) => {
       const errorResponse = (response as EventWithContent<AlertErrorModel>).content;
       this.addErrorAlert(errorResponse.message);
     });
 
-    this.httpErrorListener = this.eventManager.subscribe('footballManagerApp.httpError', (response: EventWithContent<unknown> | string) => {
+    this.httpErrorListener = this.eventManager.subscribe('footballManagerApp.httpError', (response: EventWithContent<unknown>) => {
       this.handleHttpError(response);
     });
   }
@@ -48,14 +47,14 @@ export class AlertError implements OnDestroy {
   }
 
   close(alert: AlertModel): void {
-    alert.close?.(this.alerts());
+    alert.close?.();
   }
 
   private addErrorAlert(message?: string): void {
-    this.alertService.addAlert({ type: 'danger', message }, this.alerts());
+    this.alertService.addAlert({ type: 'danger', message }, this.alerts);
   }
 
-  private handleHttpError(response: EventWithContent<unknown> | string): void {
+  private handleHttpError(response: EventWithContent<unknown>): void {
     const httpErrorResponse = (response as EventWithContent<HttpErrorResponse>).content;
     switch (httpErrorResponse.status) {
       // connection refused, server not reachable
